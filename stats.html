@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>流量儀表板｜分子診斷學解密</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/track.js"></script>
+<style>
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:24px 0 34px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.kpi b{display:block;font-size:30px;font-variant-numeric:tabular-nums;line-height:1.2}
+.kpi span{color:var(--ink2);font-size:14px}
+.tbl{width:100%;border-collapse:collapse;font-size:15px}
+.tbl th,.tbl td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl th{color:var(--ink2);font-weight:500;cursor:pointer;user-select:none;position:sticky;top:58px;background:var(--bg)}
+.tbl th[data-dir]::after{content:attr(data-dir);color:var(--teal);margin-left:4px}
+.tbl td:first-child,.tbl th:first-child{text-align:left;white-space:normal}
+.tbl td.t{min-width:220px}
+.bar{height:8px;border-radius:4px;background:var(--panel);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--teal)}
+.scroll{overflow-x:auto}
+.legend{color:var(--ink2);font-size:14px;margin-top:18px}
+.legend b{color:var(--ink)}
+.err{border:1px solid #6b3a4a;background:#24131c;color:#f3c6d4;border-radius:12px;padding:16px;margin:20px 0}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><i></i>分子診斷學解密</a>
+  <nav><a href="./">影片</a><a href="stats.html" aria-current="page">流量</a></nav>
+</div></header>
+
+<main class="wrap" style="padding:40px 20px 70px">
+  <div class="eyebrow">ANALYTICS</div>
+  <h1 style="font-family:var(--serif);margin:8px 0 4px">流量儀表板</h1>
+  <p style="color:var(--ink2);margin:0">資料來源 GoatCounter（累計訪客數，數字約有數分鐘延遲）。<span id="upd"></span>
+    <a id="dash" href="#" target="_blank" rel="noopener">開啟 GoatCounter 完整後台 →</a></p>
+  <div id="msg"></div>
+
+  <div class="kpis">
+    <div class="kpi"><b id="kTotal">—</b><span>全站總訪客</span></div>
+    <div class="kpi"><b id="kHome">—</b><span>首頁訪客</span></div>
+    <div class="kpi"><b id="kOpen">—</b><span>影片點開（16 集合計）</span></div>
+    <div class="kpi"><b id="kCtr">—</b><span>平均點擊率（點開 ÷ 首頁）</span></div>
+    <div class="kpi"><b id="kDone">—</b><span>完播（看完）次數</span></div>
+    <div class="kpi"><b id="kEthics">—</b><span>倫理專區訪客</span></div>
+  </div>
+
+  <h2 style="font-family:var(--serif)">各影片表現</h2>
+  <div class="scroll">
+  <table class="tbl" id="tbl">
+    <thead><tr>
+      <th data-k="no">集數／標題</th>
+      <th data-k="open">點開</th>
+      <th data-k="ctr">點擊率</th>
+      <th data-k="play">播放</th>
+      <th data-k="half">看一半</th>
+      <th data-k="done">看完</th>
+      <th data-k="cr">完播率</th>
+      <th data-k="share">分享</th>
+    </tr></thead>
+    <tbody></tbody>
+  </table>
+  </div>
+  <p class="legend"><b>點擊率</b>＝該集點開數 ÷ 首頁訪客；<b>完播率</b>＝看完 ÷ 播放（看到 95% 以上或播放結束才算看完）。直接用分享連結進入單集的觀眾也會算在點開數裡，所以點擊率可能超過 100%。</p>
+  <p style="margin-top:22px"><button class="btn" id="reload">重新整理數據</button> <button class="btn ghost" id="csv">下載 CSV</button></p>
+</main>
+
+<script>
+var CODE = window.GC_CODE;
+var $ = function (id) { return document.getElementById(id); };
+var rows = [], sortK = "no", sortDir = 1;
+var nf = new Intl.NumberFormat("zh-TW");
+function pct(a, b) { return b ? a / b : null; }
+function P(x) { return x == null ? "—" : (x * 100).toFixed(1) + "%"; }
+
+function count(path) {
+  return fetch("https://" + CODE + ".goatcounter.com/counter/" + encodeURIComponent(path) + ".json")
+    .then(function (r) { if (r.status === 404) return 0; if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (j) { return typeof j === "number" ? j : parseInt(String(j.count || "0").replace(/\D/g, ""), 10) || 0; });
+}
+
+function load() {
+  if (!CODE) { $("msg").innerHTML = '<div class="err">尚未設定 GoatCounter 代碼：請在 assets/track.js 填入 GC_CODE。</div>'; return; }
+  $("dash").href = "https://" + CODE + ".goatcounter.com";
+  $("msg").innerHTML = "";
+  fetch("data/episodes.json").then(function (r) { return r.json(); }).then(function (eps) {
+    var kinds = ["ep", "play", "half", "done", "share"];
+    var jobs = [count("TOTAL"), count("home"), count("ethics")];
+    eps.forEach(function (e) { kinds.forEach(function (k) { jobs.push(count(k + "-" + e.id)); }); });
+    return Promise.all(jobs).then(function (v) {
+      var total = v[0], home = v[1], ethics = v[2], i = 3;
+      rows = eps.map(function (e) {
+        var r = { no: e.no, id: e.id, title: e.title, open: v[i++], play: v[i++], half: v[i++], done: v[i++], share: v[i++] };
+        r.ctr = pct(r.open, home); r.cr = pct(r.done, r.play); return r;
+      });
+      var open = rows.reduce(function (a, r) { return a + r.open; }, 0);
+      var done = rows.reduce(function (a, r) { return a + r.done; }, 0);
+      $("kTotal").textContent = nf.format(total);
+      $("kHome").textContent = nf.format(home);
+      $("kOpen").textContent = nf.format(open);
+      $("kCtr").textContent = P(pct(open / rows.length, home));
+      $("kDone").textContent = nf.format(done);
+      $("kEthics").textContent = nf.format(ethics);
+      $("upd").textContent = "更新於 " + new Date().toLocaleTimeString("zh-TW") + "。";
+      render();
+    });
+  }).catch(function (err) {
+    $("msg").innerHTML = '<div class="err">讀取失敗（' + err.message + '）。請確認 GoatCounter 後台 Settings 已勾選「Allow adding visitor counts on your website」。</div>';
+  });
+}
+
+function render() {
+  var max = Math.max.apply(null, rows.map(function (r) { return r.open; }).concat(1));
+  var s = rows.slice().sort(function (a, b) {
+    var x = a[sortK], y = b[sortK]; x = x == null ? -1 : x; y = y == null ? -1 : y;
+    return (x > y ? 1 : x < y ? -1 : 0) * sortDir;
+  });
+  document.querySelector("#tbl tbody").innerHTML = s.map(function (r) {
+    return "<tr><td class='t'><span style='color:var(--teal);font-weight:700'>" + r.id + "</span> " + r.title +
+      "<div class='bar'><i style='width:" + (r.open / max * 100) + "%'></i></div></td>" +
+      "<td>" + nf.format(r.open) + "</td><td>" + P(r.ctr) + "</td><td>" + nf.format(r.play) + "</td><td>" +
+      nf.format(r.half) + "</td><td>" + nf.format(r.done) + "</td><td>" + P(r.cr) + "</td><td>" + nf.format(r.share) + "</td></tr>";
+  }).join("");
+  document.querySelectorAll("#tbl th").forEach(function (th) {
+    if (th.dataset.k === sortK) th.dataset.dir = sortDir > 0 ? "▲" : "▼"; else delete th.dataset.dir;
+  });
+}
+document.querySelector("#tbl thead").onclick = function (e) {
+  var th = e.target.closest("th"); if (!th) return;
+  if (sortK === th.dataset.k) sortDir = -sortDir; else { sortK = th.dataset.k; sortDir = th.dataset.k === "no" ? 1 : -1; }
+  render();
+};
+$("reload").onclick = load;
+$("csv").onclick = function () {
+  var h = ["集數", "標題", "點開", "點擊率", "播放", "看一半", "看完", "完播率", "分享"];
+  var lines = [h.join(",")].concat(rows.map(function (r) {
+    return [r.id, '"' + r.title + '"', r.open, P(r.ctr), r.play, r.half, r.done, P(r.cr), r.share].join(",");
+  }));
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + lines.join("\n")], { type: "text/csv" }));
+  a.download = "短影音流量_" + new Date().toISOString().slice(0, 10) + ".csv"; a.click();
+};
+load();
+</script>
+</body>
+</html>

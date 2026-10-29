@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>分子診斷學解密｜16 集科普短影音</title>
+<meta name="description" content="一分鐘看懂分子診斷：從一滴血讀 DNA、NIPT、PCR、NGS、液體活檢到 CRISPR 診斷，16 集科普短影音，並延伸討論基因隱私與倫理。">
+<meta property="og:title" content="分子診斷學解密｜16 集科普短影音">
+<meta property="og:description" content="一分鐘看懂分子診斷，從 DNA 到 CRISPR。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="covers/E01.jpg">
+<meta name="theme-color" content="#0b1220">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/track.js"></script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><i></i>分子診斷學解密</a>
+  <nav><a href="./" aria-current="page">影片</a><a href="ethics.html">基因隱私與倫理</a></nav>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+  <div class="eyebrow">MOLECULAR DIAGNOSTICS · 科普短影音</div>
+  <h1>一分鐘，<br>看懂 DNA 怎麼說話</h1>
+  <p>醫生要找的病因，有時候小到只有一個字母。從抽一管血、PCR、定序到 CRISPR 診斷，16 支短片帶你走一遍分子診斷的世界。</p>
+  <div class="meta">
+    <span class="pill" id="statEp">16 集</span>
+    <span class="pill" id="statMin">約 16 分鐘</span>
+    <span class="pill">直式短影音・內嵌字幕</span>
+  </div>
+  <div class="meta" style="margin-top:22px">
+    <button class="btn" id="playFirst">▶ 從第 1 集開始看</button>
+    <a class="btn ghost" href="ethics.html">基因隱私與倫理討論 →</a>
+  </div>
+</div></section>
+
+<section class="block" id="videos" style="padding-top:12px"><div class="wrap">
+  <h2>全部影片</h2>
+  <p class="sub">依主題篩選，點卡片即可播放；網址可直接分享單集。</p>
+  <div class="filters" id="filters" role="group" aria-label="主題篩選"></div>
+  <div class="grid" id="grid" aria-live="polite"></div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="ethics-band">
+    <div>
+      <div class="eyebrow">延伸討論</div>
+      <h2 style="margin-top:8px">當 DNA 被讀出來之後，誰能看？</h2>
+      <p class="sub" style="margin:0">檢測技術越來越便宜，基因資料卻是一輩子改不掉的密碼。它會影響保險、就業、家人嗎？我們整理了相關的隱私與倫理議題。</p>
+      <p style="margin:18px 0 0"><a class="btn" href="ethics.html">進入討論專區</a></p>
+    </div>
+    <ul>
+      <li>基因資料屬於誰？家人也有份嗎？</li>
+      <li>保險與就業會不會因基因被差別待遇？</li>
+      <li>直售型基因檢測（DTC）要注意什麼？</li>
+      <li>產前檢測與知情同意</li>
+    </ul>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p>影片內容為科普用途，不能取代醫師診斷與遺傳諮詢。</p>
+  <p>本站使用 GoatCounter 統計匿名瀏覽與播放次數，不使用 Cookie、不蒐集個人資料。</p>
+</div></footer>
+
+<dialog class="player" id="dlg" aria-label="影片播放">
+  <div class="pl">
+    <button class="x" id="close" aria-label="關閉">×</button>
+    <video id="vid" controls playsinline preload="metadata"></video>
+    <div class="side">
+      <div class="eyebrow" id="pNo"></div>
+      <h2 id="pTitle"></h2>
+      <p class="hook" id="pHook"></p>
+      <details><summary>旁白文字稿</summary><ol id="pTx"></ol></details>
+      <div class="ctrl">
+        <button class="btn ghost" id="prev">← 上一集</button>
+        <button class="btn ghost" id="next">下一集 →</button>
+        <button class="btn" id="share">複製分享連結</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+var GROUPS = [
+  { name: "全部", ids: null },
+  { name: "遺傳與染色體", ids: ["E01","E02","E03","E04","E05"] },
+  { name: "定序與產前檢測", ids: ["E06","E07","E08"] },
+  { name: "檢測技術", ids: ["E09","E10","E11"] },
+  { name: "癌症與精準醫療", ids: ["E12","E13","E14"] },
+  { name: "感染與新技術", ids: ["E15","E16"] }
+];
+var EPS = [], cur = -1, flags = {};
+var $ = function (id) { return document.getElementById(id); };
+var dlg = $("dlg"), vid = $("vid");
+
+function seen() { try { return JSON.parse(localStorage.getItem("seenEps") || "[]"); } catch (e) { return []; } }
+function markSeen(id) { try { var s = seen(); if (s.indexOf(id) < 0) { s.push(id); localStorage.setItem("seenEps", JSON.stringify(s)); } } catch (e) {} }
+function fmt(s) { return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+function esc(t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
+
+function renderFilters() {
+  $("filters").innerHTML = GROUPS.map(function (g, i) {
+    return '<button class="chip" aria-pressed="' + (i === 0) + '" data-i="' + i + '">' + g.name + '</button>';
+  }).join("");
+  $("filters").onclick = function (e) {
+    var b = e.target.closest(".chip"); if (!b) return;
+    [].forEach.call(this.children, function (c) { c.setAttribute("aria-pressed", c === b); });
+    renderGrid(GROUPS[+b.dataset.i].ids);
+  };
+}
+function renderGrid(ids) {
+  var s = seen();
+  $("grid").innerHTML = EPS.filter(function (e) { return !ids || ids.indexOf(e.id) >= 0; }).map(function (e) {
+    return '<button class="card" data-id="' + e.id + '" aria-label="播放第 ' + e.no + ' 集：' + esc(e.title) + '">' +
+      '<div class="thumb"><img loading="lazy" src="covers/' + e.id + '.jpg" alt="">' +
+      (s.indexOf(e.id) >= 0 ? '<span class="seen">已看過</span>' : '') +
+      '<span class="dur">' + fmt(e.duration) + '</span><div class="play"><span></span></div></div>' +
+      '<div class="body"><div class="no">EP ' + String(e.no).padStart(2, "0") + '</div><h3>' + esc(e.title) + '</h3></div></button>';
+  }).join("");
+}
+$("grid").onclick = function (e) {
+  var c = e.target.closest(".card"); if (c) openEp(c.dataset.id, true);
+};
+
+function openEp(id, fromClick) {
+  var i = EPS.findIndex(function (e) { return e.id === id; });
+  if (i < 0) return;
+  cur = i; var e = EPS[i];
+  flags = { play: false, half: false, done: false };
+  vid.poster = "covers/" + e.id + ".jpg";
+  vid.src = "videos/" + e.id + ".mp4";
+  $("pNo").textContent = "EP " + String(e.no).padStart(2, "0") + " · " + fmt(e.duration);
+  $("pTitle").textContent = e.title;
+  $("pHook").textContent = e.hook;
+  $("pTx").innerHTML = e.transcript.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
+  $("prev").disabled = i === 0;
+  $("next").disabled = i === EPS.length - 1;
+  if (!dlg.open) dlg.showModal();
+  if (location.hash !== "#" + e.id) history.replaceState(null, "", "#" + e.id);
+  document.title = e.title + "｜分子診斷學解密";
+  track("ep-" + e.id, "點開 " + e.id + " " + e.title, false);
+  if (fromClick) { var p = vid.play(); if (p && p.catch) p.catch(function () {}); }
+}
+function closeEp() {
+  vid.pause(); vid.removeAttribute("src"); vid.load();
+  if (dlg.open) dlg.close();
+  history.replaceState(null, "", location.pathname + location.search);
+  document.title = "分子診斷學解密｜16 集科普短影音";
+  renderGrid(GROUPS[+(document.querySelector('.chip[aria-pressed=true]') || {dataset:{i:0}}).dataset.i].ids);
+}
+$("close").onclick = closeEp;
+dlg.addEventListener("cancel", function (e) { e.preventDefault(); closeEp(); });
+dlg.addEventListener("click", function (e) { if (e.target === dlg) closeEp(); });
+$("prev").onclick = function () { if (cur > 0) openEp(EPS[cur - 1].id, true); };
+$("next").onclick = function () { if (cur < EPS.length - 1) openEp(EPS[cur + 1].id, true); };
+$("share").onclick = function () {
+  var url = location.origin + location.pathname + "#" + EPS[cur].id;
+  var done = function () { toast("已複製連結"); };
+  if (navigator.share && /Mobi/i.test(navigator.userAgent)) {
+    navigator.share({ title: EPS[cur].title, url: url }).catch(function () {});
+  } else if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { prompt("複製連結", url); });
+  else prompt("複製連結", url);
+  track("share-" + EPS[cur].id, "分享 " + EPS[cur].id, true);
+};
+$("playFirst").onclick = function () { openEp("E01", true); };
+
+vid.addEventListener("play", function () {
+  var e = EPS[cur]; if (!e || flags.play) return; flags.play = true;
+  track("play-" + e.id, "播放 " + e.id, true);
+});
+vid.addEventListener("timeupdate", function () {
+  var e = EPS[cur]; if (!e || !vid.duration) return;
+  var r = vid.currentTime / vid.duration;
+  if (!flags.half && r >= 0.5) { flags.half = true; track("half-" + e.id, "看一半 " + e.id, true); }
+  if (!flags.done && r >= 0.95) { flags.done = true; markSeen(e.id); track("done-" + e.id, "看完 " + e.id, true); }
+});
+vid.addEventListener("ended", function () {
+  var e = EPS[cur];
+  if (e && !flags.done) { flags.done = true; markSeen(e.id); track("done-" + e.id, "看完 " + e.id, true); }
+});
+vid.addEventListener("error", function () { if (vid.getAttribute("src")) toast("影片載入失敗，請重新整理再試"); });
+
+function toast(t) { var el = $("toast"); el.textContent = t; el.classList.add("on"); setTimeout(function () { el.classList.remove("on"); }, 1800); }
+
+track("home", "首頁", false);
+fetch("data/episodes.json").then(function (r) { return r.json(); }).then(function (d) {
+  EPS = d;
+  $("statEp").textContent = d.length + " 集";
+  $("statMin").textContent = "共約 " + Math.round(d.reduce(function (a, e) { return a + e.duration; }, 0) / 60) + " 分鐘";
+  renderFilters(); renderGrid(null);
+  var h = location.hash.slice(1).toUpperCase();
+  if (/^E\d\d$/.test(h)) openEp(h, false);
+}).catch(function () { $("grid").innerHTML = '<p class="note">影片清單載入失敗，請重新整理。</p>'; });
+</script>
+</body>
+</html>

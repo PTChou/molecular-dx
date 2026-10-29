@@ -76,21 +76,22 @@
 <script>
 var CODE = window.GC_CODE;
 var $ = function (id) { return document.getElementById(id); };
-var rows = [], sortK = "no", sortDir = 1;
+var rows = [], sortK = "no", sortDir = 1, fails = 0;
 var nf = new Intl.NumberFormat("zh-TW");
 function pct(a, b) { return b ? a / b : null; }
 function P(x) { return x == null ? "—" : (x * 100).toFixed(1) + "%"; }
 
 function count(path) {
-  return fetch("https://" + CODE + ".goatcounter.com/counter/" + encodeURIComponent(path) + ".json")
+  return fetch("https://" + CODE + ".goatcounter.com/counter/" + encodeURIComponent(path) + ".json?t=" + Date.now(), { cache: "no-store" })
     .then(function (r) { if (r.status === 404) return 0; if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (j) { return typeof j === "number" ? j : parseInt(String(j.count || "0").replace(/\D/g, ""), 10) || 0; });
+    .then(function (j) { return typeof j === "number" ? j : parseInt(String(j.count || "0").replace(/\D/g, ""), 10) || 0; })
+    .catch(function () { fails++; return 0; });
 }
 
 function load() {
   if (!CODE) { $("msg").innerHTML = '<div class="err">尚未設定 GoatCounter 代碼：請在 assets/track.js 填入 GC_CODE。</div>'; return; }
   $("dash").href = "https://" + CODE + ".goatcounter.com";
-  $("msg").innerHTML = "";
+  $("msg").innerHTML = ""; fails = 0;
   fetch("data/episodes.json").then(function (r) { return r.json(); }).then(function (eps) {
     var kinds = ["ep", "play", "half", "done", "share"];
     var jobs = [count("visit"), count("home"), count("ethics")];
@@ -111,6 +112,7 @@ function load() {
       $("kEthics").textContent = nf.format(ethics);
       $("upd").textContent = "更新於 " + new Date().toLocaleTimeString("zh-TW") + "。";
       render(); loadEthics();
+      if (fails > 5) $("msg").innerHTML = '<div class="err">有 ' + fails + ' 項數字讀取失敗，請稍後按「重新整理數據」。</div>';
     });
   }).catch(function (err) {
     $("msg").innerHTML = '<div class="err">讀取失敗（' + err.message + '）。請確認 GoatCounter 後台 Settings 已勾選「Allow adding visitor counts on your website」。</div>';

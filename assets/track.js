@@ -14,7 +14,7 @@
      half-E01        看到一半（事件）
      done-E01        看完（事件，≥95% 或播放結束）
    ============================================================ */
-window.GC_CODE = "";   // ← 填入 GoatCounter 代碼
+window.GC_CODE = "moleculardx";   // ← 填入 GoatCounter 代碼
 
 (function () {
   var q = [];

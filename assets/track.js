@@ -7,6 +7,7 @@
       「Allow adding visitor counts on your website」
       流量儀表板（stats.html）才讀得到各影片數字
    記錄的路徑（後台 Pages 會看到）：
+     visit           任何頁面載入（全站造訪）
      home            首頁瀏覽
      ethics          倫理專區瀏覽
      ep-E01          點開第 1 集（＝點擊）
@@ -20,12 +21,13 @@ window.GC_CODE = "moleculardx";   // ← 填入 GoatCounter 代碼
   var q = [];
   var local = /^(localhost|127\.|192\.168\.|\[::1\])/.test(location.hostname) || location.protocol === "file:";
   window.track = function (path, title, isEvent) {
-    var hit = { path: path, title: title || path, event: !!isEvent };
+    var hit = { path: path, title: title || path, event: true };  // 全部以事件記錄，路徑不加斜線，儀表板才讀得到
     if (local) { console.log("[track]", hit); }
     if (!window.GC_CODE) return;
     if (window.goatcounter && window.goatcounter.count) window.goatcounter.count(hit);
     else q.push(hit);
   };
+  if (!/stats\.html$/.test(location.pathname)) window.track("visit", "網站造訪", true);
   if (!window.GC_CODE) return;
   window.goatcounter = { no_onload: true, allow_local: false };
   var s = document.createElement("script");

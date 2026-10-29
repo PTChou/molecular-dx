@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
-<script src="assets/track.js"></script>
+<script src="assets/track.js?v=2"></script>
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:24px 0 34px}
 .kpi{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
@@ -93,7 +93,7 @@ function load() {
   $("msg").innerHTML = "";
   fetch("data/episodes.json").then(function (r) { return r.json(); }).then(function (eps) {
     var kinds = ["ep", "play", "half", "done", "share"];
-    var jobs = [count("TOTAL"), count("home"), count("ethics")];
+    var jobs = [count("visit"), count("home"), count("ethics")];
     eps.forEach(function (e) { kinds.forEach(function (k) { jobs.push(count(k + "-" + e.id)); }); });
     return Promise.all(jobs).then(function (v) {
       var total = v[0], home = v[1], ethics = v[2], i = 3;

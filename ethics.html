@@ -2,40 +2,1008 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>基因隱私與倫理｜分子診斷學解密</title>
-<meta name="description" content="基因資料屬於誰？保險、就業、家人與直售型基因檢測的隱私與倫理討論。">
-<meta name="theme-color" content="#0b1220">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>基因隱私事件簿｜分子診斷學解密</title>
+<meta name="description" content="從金州殺手案出發，用角色代入、四角辯論與論點攻防表，思辨基因隱私、公共利益與知情權。">
+<meta name="theme-color" content="#070B1A">
+<style>[hidden]:not([hidden=until-found i]){display:none!important}img{max-width:100%}body{margin:0}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap">
+<style>
+/* Layout concept: a night-time mystery opening (iris-in city, DNA under a magnifier, flash cards, title drop),
+   then a "case board" hub of 7 case files; each file opens as one compact, tabbed, interactive screen. Single dark look by choice. */
+:root{
+  color-scheme:dark;
+  --bg:#070B1A;
+  --bg2:#0E1530;
+  --panel:#141C3B;
+  --panel2:#1C2750;
+  --fg:#ECEFF8;
+  --muted:#A3AECF;
+  --line:#2C3868;
+  --spot:#FFD166;     /* spotlight yellow */
+  --spot-ink:#1A1404;
+  --red:#FF5A5F;      /* evidence stamp */
+  --cyan:#5EEAD4;     /* DNA / privacy */
+  --display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.8;padding-inline:16px;padding-block:0;min-height:100%}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--display);line-height:1.3;text-wrap:balance}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--spot);outline-offset:2px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:1040px;margin-inline:auto}
+
+/* ============ INTRO ============ */
+.intro{position:fixed;inset:0;z-index:50;background:#02040B;overflow:hidden;clip-path:circle(150% at 50% 50%);transition:clip-path .9s cubic-bezier(.7,0,.3,1)}
+.intro.out{clip-path:circle(0% at 50% 50%)}
+.skip{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:16px;z-index:5;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 16px;font-size:14px;color:#fff}
+.skip:hover{background:rgba(255,255,255,.18)}
+.sc{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s}
+.sc.on{opacity:1;visibility:visible}
+
+/* scene 1 : city + iris */
+.s1 .city{position:absolute;inset:0;background:linear-gradient(#050815,#121b47 65%,#2b3070);clip-path:circle(0% at 50% 62%)}
+.s1.on .city{animation:iris 1.8s .15s cubic-bezier(.3,.6,.2,1) forwards}
+@keyframes iris{to{clip-path:circle(140% at 50% 62%)}}
+.city svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.win{fill:var(--spot);animation:tw 3s infinite alternate}
+@keyframes tw{from{opacity:.25}to{opacity:.95}}
+.glint{fill:#fff;transform-origin:center;transform-box:fill-box;opacity:0}
+.s1.on .glint{animation:glint 1.2s 2.2s ease-out forwards}
+@keyframes glint{0%{opacity:0;transform:scale(.2)}40%{opacity:1;transform:scale(1.4)}100%{opacity:.85;transform:scale(1)}}
+.cap{position:absolute;left:16px;right:16px;bottom:12%;text-align:center;display:grid;gap:10px;justify-items:center}
+.cap .a{font-family:var(--mono);color:var(--spot);letter-spacing:.25em;font-size:clamp(12px,2.4vw,18px);display:inline-block;clip-path:inset(0 100% 0 0)}
+.cap .b{font-family:var(--display);font-weight:900;font-size:clamp(24px,5.4vw,46px);color:#fff;opacity:0;transform:translateY(12px);text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.s1.on .cap .a{animation:type 1.4s 1.7s steps(16) forwards}
+.s1.on .cap .b{animation:rise .8s 2.3s ease-out forwards}
+@keyframes type{to{clip-path:inset(0 0 0 0)}}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* scene 2 : DNA + magnifier */
+.s2{background:radial-gradient(ellipse at 50% 45%,#16214F 0%,#05081A 70%)}
+.s2 svg{position:absolute;left:50%;top:44%;width:min(980px,96vw);height:auto;transform:translate(-50%,-50%)}
+.strand{fill:none;stroke:var(--cyan);stroke-width:3;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+.s2.on .strand{animation:draw 1.6s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.rung{stroke:var(--line);stroke-width:2.5;stroke-linecap:round}
+.s2.on .rung{animation:lit .3s var(--d) forwards}
+@keyframes lit{to{stroke:var(--spot);stroke-width:4}}
+.lens{transform:translate(0,0)}
+.s2.on .lens{animation:sweep 2.6s .5s cubic-bezier(.45,0,.3,1) forwards}
+@keyframes sweep{from{transform:translate(20px,120px)}to{transform:translate(380px,120px)}}
+.lens{transform:translate(20px,120px)}
+.cap2{position:absolute;left:16px;right:16px;bottom:13%;text-align:center;font-family:var(--display);font-weight:900;font-size:clamp(26px,6vw,54px);color:#fff;opacity:0;text-shadow:0 0 28px rgba(255,209,102,.45)}
+.s2.on .cap2{animation:rise .8s 1.3s ease-out forwards}
+
+/* scene 3 : flash cards */
+.s3{background:#02040B}
+.fl{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;opacity:0}
+.fl .box{position:absolute;inset:-10% -20%;transform:skewX(-14deg)}
+.fl .txt{position:relative;text-align:center;display:grid;gap:8px;padding:0 16px}
+.fl .txt small{font-family:var(--mono);letter-spacing:.3em;font-size:clamp(12px,2.2vw,18px)}
+.fl .txt b{font-family:var(--display);font-weight:900;font-size:clamp(44px,13vw,150px);line-height:1.1;letter-spacing:.04em}
+.fl.f1 .box{background:var(--spot)} .fl.f1 .txt{color:var(--spot-ink)}
+.fl.f2 .box{background:var(--red)} .fl.f2 .txt{color:#fff}
+.fl.f3 .box{background:var(--cyan)} .fl.f3 .txt{color:#04201B}
+.fl.f4 .box{background:#fff} .fl.f4 .txt{color:#0A0F25}
+.s3.on .fl{animation:flash .75s var(--d) both}
+@keyframes flash{0%{opacity:1;clip-path:inset(0 100% 0 0)}22%{opacity:1;clip-path:inset(0 0 0 0)}85%{opacity:1;clip-path:inset(0 0 0 0)}100%{opacity:0;clip-path:inset(0 0 0 0)}}
+
+/* scene 4 : title */
+.s4{background:radial-gradient(ellipse at 50% 40%,rgba(255,209,102,.10),transparent 55%),radial-gradient(ellipse at 50% 100%,#1A2560,#04060F 70%);display:grid;place-items:center;text-align:center;padding:16px}
+.s4 .in{display:grid;gap:18px;justify-items:center;max-width:980px}
+.s4 .no{font-family:var(--mono);letter-spacing:.3em;color:var(--spot);font-size:clamp(11px,2vw,15px);opacity:0}
+.s4.on .no{animation:rise .6s .1s forwards}
+.ttl{font-family:var(--display);font-weight:900;font-size:clamp(30px,min(12.5vw,calc((100vw - 32px)/7.6)),128px);line-height:1.12;color:#fff;letter-spacing:.02em;text-shadow:0 0 34px rgba(255,209,102,.5),0 4px 0 rgba(0,0,0,.4);display:flex;flex-wrap:nowrap;white-space:nowrap;justify-content:center}
+.ttl span{display:inline-block;opacity:0;transform:translateY(-130%) rotate(-10deg)}
+.s4.on .ttl span{animation:drop .6s calc(var(--i)*.09s + .3s) cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes drop{to{opacity:1;transform:none}}
+.sub{font-size:clamp(15px,2.6vw,22px);color:var(--muted);opacity:0}
+.sub b{color:var(--spot);font-weight:700}
+.s4.on .sub{animation:rise .7s 1.4s forwards}
+.go{background:var(--spot);color:var(--spot-ink);border:0;border-radius:4px;font-weight:700;font-size:18px;padding:14px 34px;letter-spacing:.12em;opacity:0;transform:skewX(-8deg);box-shadow:6px 6px 0 var(--red)}
+.go span{display:inline-block;transform:skewX(8deg)}
+.s4.on .go{animation:rise .7s 2s forwards,pulse 1.6s 2.8s infinite}
+@keyframes pulse{50%{box-shadow:10px 10px 0 var(--red)}}
+.go:hover{filter:brightness(1.08)}
+
+/* ============ APP ============ */
+.app{max-width:1040px;margin-inline:auto;padding-block:28px 64px}
+.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end;justify-content:space-between;margin-bottom:28px}
+.top h1{font-size:clamp(26px,4.6vw,40px);font-weight:900}
+.top .mono{display:block;margin-bottom:6px;color:var(--spot)}
+.prog{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:6px}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--panel2);border:1px solid var(--line)}
+.dots i.on{background:var(--spot);border-color:var(--spot)}
+.btn{background:var(--spot);color:var(--spot-ink);border:0;border-radius:4px;padding:10px 18px;font-weight:700}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--spot)}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.tile{position:relative;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:22px 22px 20px;min-height:176px;display:grid;align-content:space-between;gap:12px;transition:transform .2s,border-color .2s;overflow:hidden}
+.tile:hover{transform:translateY(-4px);border-color:var(--spot)}
+.tile .no{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--spot)}
+.tile h3{font-size:24px;font-weight:900}
+.tile p{font-size:14px;color:var(--muted);line-height:1.6}
+.tile .big{position:absolute;right:14px;top:-10px;font-family:var(--display);font-weight:900;font-size:96px;color:var(--panel2);line-height:1;pointer-events:none}
+.tile>*:not(.big):not(.stamp){position:relative}
+.tile .stamp{position:absolute;right:16px;bottom:14px;border:2px solid var(--red);color:var(--red);border-radius:3px;padding:0 8px;font-family:var(--display);font-weight:900;font-size:15px;transform:rotate(-8deg);opacity:0}
+.tile.done .stamp{opacity:1}
+.foot{margin-top:40px;font-size:13px;color:var(--muted);max-width:46em}
+
+/* views */
+.view{animation:vin .35s ease-out}
+@keyframes vin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.vhead{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:22px}
+.vhead h2{font-size:clamp(24px,4vw,34px);font-weight:900}
+.vhead .mono{color:var(--spot);display:block}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tabs button{background:transparent;border:0;border-bottom:3px solid transparent;padding:10px 16px;color:var(--muted);font-weight:500}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--spot)}
+.tabs button:hover{color:var(--fg)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:24px;min-width:0}
+.panel+.panel{margin-top:16px}
+.panel h3{font-size:20px;margin-bottom:10px}
+.panel p+p{margin-top:10px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.lead{font-size:18px}
+.note{font-size:14px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px;margin-top:14px}
+.chip{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--spot);color:var(--spot-ink);border-color:var(--spot);font-weight:700}
+ul.clean,ol.clean{margin:10px 0 0;padding-left:1.3em}
+.clean li+li{margin-top:6px}
+
+/* stepper */
+.steps{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+.rail{display:flex;flex-direction:column;gap:8px}
+.rail button{width:40px;height:40px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);font-family:var(--mono);font-weight:500}
+.rail button.on{background:var(--spot);color:var(--spot-ink);border-color:var(--spot)}
+.rail button.seen{border-color:var(--spot);color:var(--spot)}
+.rail button.on.seen{color:var(--spot-ink)}
+.stepbody{min-width:0}
+.stepbody h3{font-size:26px;margin-bottom:10px}
+.stepbody .tag{display:inline-block;background:var(--red);color:#fff;font-family:var(--mono);font-size:12px;letter-spacing:.12em;padding:1px 10px;border-radius:2px;margin-bottom:10px}
+
+/* role */
+.role-out{margin-top:16px;padding:18px;background:var(--panel2);border-radius:4px;min-height:96px;display:grid;gap:4px}
+.role-out b{font-family:var(--display);font-size:24px;color:var(--spot)}
+
+/* corners */
+.qline{font-size:19px;font-weight:700;margin:12px 0 16px}
+.corners{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.corner{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:16px 8px;text-align:center;line-height:1.4;font-size:15px}
+.corner:hover{border-color:var(--spot)}
+.corner[aria-pressed="true"]{background:var(--spot);color:var(--spot-ink);border-color:var(--spot);font-weight:700}
+.reply{margin-top:14px;padding:14px 16px;background:var(--panel2);border-left:4px solid var(--cyan);border-radius:2px;min-height:3.6em}
+
+/* balance */
+.bal svg{display:block;width:100%;max-width:440px;height:auto;margin-inline:auto}
+.bal input[type=range]{width:100%;accent-color:var(--spot);margin-top:6px}
+.bal .ends{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:700}
+.bal .ends span:first-child{color:var(--cyan)}
+.bal .ends span:last-child{color:var(--spot)}
+.read{margin-top:12px;padding:14px 16px;background:var(--panel2);border-radius:4px;min-height:4.2em}
+.vs>div{padding:16px;border-radius:4px;background:var(--panel2);font-size:15px}
+.vs b{display:block;margin-bottom:4px}
+.vs .l b{color:var(--cyan)}
+.vs .r b{color:var(--spot)}
+
+/* builder */
+.ab{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ab label{display:block;font-weight:700;margin-bottom:6px}
+.ab label small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.ab textarea{width:100%;min-height:124px;resize:vertical;background:var(--bg2);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:10px 12px;font:inherit;line-height:1.7}
+.ab textarea:focus{border-color:var(--spot);outline:none;box-shadow:0 0 0 3px rgba(255,209,102,.25)}
+.ab .f{min-width:0}
+.ab .c label{color:var(--spot)}
+.ab .k label{color:var(--cyan)}
+.toast{font-size:14px;color:var(--cyan);min-height:1.5em}
+
+/* accordion / checklist */
+.acc{border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+.acc+.acc{margin-top:10px}
+.acc>button{display:flex;justify-content:space-between;gap:12px;width:100%;background:transparent;border:0;padding:16px 20px;text-align:left;font-weight:700;font-size:17px}
+.acc>button::after{content:"＋";color:var(--spot)}
+.acc>button[aria-expanded="true"]::after{content:"－"}
+.acc .bd{padding:0 20px 18px}
+.acc .think{margin-top:12px;padding:12px 14px;background:var(--panel2);border-radius:4px;font-size:15px}
+.acc .think b{color:var(--spot)}
+.chk{display:grid;gap:10px;margin-top:12px}
+.chk label{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--panel2);padding:12px 14px;border-radius:4px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--spot);margin-top:4px}
+.meter{height:8px;background:var(--panel2);border-radius:999px;overflow:hidden;margin-top:14px}
+.meter i{display:block;height:100%;width:0;background:var(--cyan);transition:width .3s}
+
+/* quiz */
+.qopts{display:grid;gap:10px;margin-top:14px}
+.opt{text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:12px 16px;line-height:1.6}
+.opt:hover:not(:disabled){border-color:var(--spot)}
+.opt.ok{border-color:var(--cyan);background:rgba(94,234,212,.14)}
+.opt.no{border-color:var(--red);background:rgba(255,90,95,.14)}
+.fb{margin-top:14px;min-height:3.4em;color:var(--muted)}
+.qprog{display:flex;gap:6px;margin-bottom:14px}
+.qprog i{flex:1;height:6px;border-radius:3px;background:var(--panel2)}
+.qprog i.on{background:var(--spot)}
+.qprog i.ok{background:var(--cyan)}
+.qprog i.no{background:var(--red)}
+.result{text-align:center;display:grid;gap:14px;justify-items:center;padding:16px 0}
+.result .stamp{border:4px solid var(--red);color:var(--red);font-family:var(--display);font-weight:900;font-size:44px;padding:0 20px;transform:rotate(-7deg);border-radius:4px}
+.result .sc2{font-family:var(--display);font-size:30px;font-weight:900;font-variant-numeric:tabular-nums}
+
+/* table */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:4px}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:15px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:500;background:var(--panel2)}
+tr:last-child td{border-bottom:0}
+td.t{font-family:var(--mono);white-space:nowrap;color:var(--spot);font-variant-numeric:tabular-nums}
+.quote{font-family:var(--display);font-size:clamp(20px,3vw,28px);font-weight:600;line-height:1.6;margin-top:22px;max-width:30em}
+
+@media (max-width:820px){
+  .g2,.g3,.ab{grid-template-columns:1fr}
+  .corners{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:1fr}
+  .rail{flex-direction:row;flex-wrap:wrap}
+  .panel{padding:18px}
+}
+/* ---- polish layer: texture, ambient light, motion, usability ---- */
+::selection{background:var(--spot);color:var(--spot-ink)}
+p{text-wrap:pretty}
+.panel p{max-width:42em}
+.app{position:relative;z-index:1}
+h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus{outline:none}
+.dust{position:fixed;inset:0;z-index:0;pointer-events:none}
+.spot{position:fixed;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(540px circle at var(--sx,50%) var(--sy,28%),rgba(255,209,102,.10),transparent 70%)}
+body::after{content:"";position:fixed;inset:0;z-index:55;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+.ring{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:2px solid var(--spot);border-radius:50%;pointer-events:none;z-index:70;opacity:0;transition:opacity .2s,width .2s,height .2s,margin .2s,background .2s,scale .15s}
+.ring.on{opacity:.9}
+.ring.hot{width:58px;height:58px;margin:-29px 0 0 -29px;background:rgba(255,209,102,.12)}
+.ring.down{scale:.8}
+@media not all and (hover:hover) and (pointer:fine){.ring{display:none}}
+
+/* intro: letterbox, rec hud, progress */
+.lb{position:absolute;left:0;right:0;height:8vh;background:#000;z-index:4;transform:scaleY(0);transition:transform .9s cubic-bezier(.7,0,.3,1)}
+.lb.t{top:0;transform-origin:top}
+.lb.b{bottom:0;transform-origin:bottom}
+.intro.play .lb{transform:none}
+.hud{position:absolute;left:16px;top:calc(18px + env(safe-area-inset-top,0px));z-index:5;display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:#fff}
+.rec{width:10px;height:10px;border-radius:50%;background:var(--red);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.15}}
+.pbar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.1);z-index:5;transition:opacity .3s}
+.intro:not(.play) .pbar{opacity:0}
+.pbar i{display:block;height:100%;background:var(--spot);transform:scaleX(0);transform-origin:left}
+.intro.play .pbar i{animation:pb 10.4s linear forwards}
+@keyframes pb{to{transform:scaleX(1)}}
+.hint{position:absolute;right:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:5;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:rgba(255,255,255,.55)}
+
+/* hub: oversized title, marquee, tile light */
+.top h1{font-size:clamp(40px,9vw,92px);line-height:1.04;letter-spacing:.02em;white-space:nowrap}
+.top h1 em{font-style:normal;display:inline-block;color:var(--spot-ink);background:var(--spot);padding:.02em .2em .08em;margin-left:.1em;border-radius:4px;box-shadow:.07em .07em 0 var(--red);transform:rotate(-2deg)}
+.marq{overflow:hidden;border-block:1px solid var(--line);margin-bottom:30px;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marq div{display:inline-flex;animation:mq 40s linear infinite}
+.marq:hover div{animation-play-state:paused}
+.marq span{font-family:var(--mono);font-size:12px;letter-spacing:.24em;color:var(--muted);padding:11px 0 11px 20px}
+.marq span::after{content:"◆";color:var(--spot);margin-left:40px}
+@keyframes mq{to{transform:translateX(-50%)}}
+.board .tile{animation:tin .6s calc(var(--i,0)*70ms + 120ms) cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes tin{from{opacity:0;transform:translateY(26px)}}
+.tile{transition:transform .12s ease-out,border-color .2s}
+.tile:hover,.tile:focus-visible{transform:perspective(800px) translateY(-4px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));border-color:var(--spot)}
+.tile::after{content:"";position:absolute;inset:0;background:radial-gradient(240px circle at var(--px,50%) var(--py,50%),rgba(255,209,102,.16),transparent 62%);opacity:0;transition:opacity .2s;pointer-events:none}
+.tile:hover::after{opacity:1}
+.tile.done .stamp{animation:slam .4s cubic-bezier(.2,1.6,.4,1) backwards}
+@keyframes slam{from{opacity:0;scale:2.5}}
+.result .stamp{animation:slam .5s cubic-bezier(.2,1.6,.4,1) backwards}
+.foot button{background:transparent;border:0;color:var(--muted);text-decoration:underline;padding:0;font-size:13px}
+.foot button:hover{color:var(--spot)}
+kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:3px;padding:0 6px;background:var(--panel)}
+
+/* magnetic buttons, panel entrance, touch targets */
+.btn{display:inline-flex;align-items:center;justify-content:center;translate:var(--tx,0) var(--ty,0);transition:translate .2s,filter .2s}
+.go{translate:var(--tx,0) var(--ty,0);transition:translate .2s,filter .2s}
+.btn,.chip,.tabs button,.opt,.corner{min-height:44px}
+.rail button{width:44px;height:44px}
+.tp:not([hidden]){animation:vin .3s ease-out}
+
+/* page transition: iris wipe from the click point */
+::view-transition-group(root){animation-duration:.7s}
+::view-transition-image-pair(root){isolation:auto}
+::view-transition-old(root),::view-transition-new(root){mix-blend-mode:normal;animation:none}
+::view-transition-new(root){animation:irisIn .7s cubic-bezier(.7,0,.2,1) both}
+@keyframes irisIn{from{clip-path:circle(0% at var(--vx,50%) var(--vy,50%))}to{clip-path:circle(150% at var(--vx,50%) var(--vy,50%))}}
+
+@media (max-width:820px){
+  .top h1{font-size:clamp(28px,calc((100vw - 32px)/7.9),64px)}
+  .marq{margin-bottom:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+  .marq div,.go,.rec{animation:none!important}
+}
+</style>
+<style>
+.sitebar{position:relative;z-index:3;max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:14px 0 0;font-size:14px}
+.sitebar a{color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+.sitebar a:hover{color:var(--fg);border-color:var(--spot)}
+.sitebar .sp{flex:1}
+.sitefoot{position:relative;z-index:3;max-width:1040px;margin:0 auto;padding:0 0 40px;font-size:13px;color:var(--muted)}
+</style>
 <script src="assets/track.js"></script>
 </head>
 <body>
-<header class="nav"><div class="wrap">
-  <a class="brand" href="./"><i></i>分子診斷學解密</a>
-  <nav><a href="./">影片</a><a href="ethics.html" aria-current="page">基因隱私與倫理</a></nav>
-</div></header>
+<nav class="sitebar" aria-label="網站導覽"><a href="./">◂ 回到分子診斷短影音</a><span class="sp"></span><a href="./#videos">全部影片</a></nav>
 
-<main class="prose">
-  <div class="eyebrow">延伸討論</div>
-  <h1>當 DNA 被讀出來之後，誰能看？</h1>
-  <p>前面 16 集介紹了怎麼從一滴血讀出 DNA。技術越便宜，越多人會做基因檢測；但基因資料和密碼不同，它無法更改，還會透露血親的資訊。這一頁整理相關的隱私與倫理議題。</p>
 
-  <!-- ===== 以下為內容區：收到正式討論稿後替換 ===== -->
-  <div id="ethics-content">
-    <div class="note">討論內容整理中，即將上線。</div>
+<!-- ============ INTRO ============ -->
+<div class="intro" id="intro" aria-label="開場動畫">
+  <button class="skip" id="skip" type="button">略過 ▸</button>
+  <div class="lb t"></div><div class="lb b"></div>
+  <div class="hud" id="hud" aria-hidden="true"><span class="rec"></span><span id="tc">REC 00:00</span></div>
+  <span class="hint" id="hint" aria-hidden="true">按空白鍵略過</span>
+  <div class="pbar" aria-hidden="true"><i></i></div>
+
+  <div class="sc s1" id="s1">
+    <div class="city">
+      <svg id="citySvg" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+    </div>
+    <div class="cap"><span class="a">2018 · CALIFORNIA</span><span class="b">一次上傳，牽動一個家族</span></div>
   </div>
-  <!-- ===== 內容區結束 ===== -->
 
-  <p style="margin-top:48px"><a class="btn ghost" href="./">← 回到影片列表</a></p>
-</main>
+  <div class="sc s2" id="s2">
+    <svg viewBox="0 0 400 240" aria-hidden="true">
+      <g id="helix"></g>
+      <g class="lens">
+        <circle r="36" fill="rgba(255,209,102,.1)" stroke="#FFD166" stroke-width="5"/>
+        <line x1="26" y1="26" x2="58" y2="58" stroke="#FFD166" stroke-width="9" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div class="cap2">線索，藏在基因裡</div>
+  </div>
 
-<footer><div class="wrap">
-  <p>本頁為科普與公共討論用途，不構成法律或醫療建議。</p>
-  <p>本站使用 GoatCounter 統計匿名瀏覽與播放次數，不使用 Cookie、不蒐集個人資料。</p>
-</div></footer>
-<script>track("ethics", "基因隱私與倫理", false);</script>
+  <div class="sc s3" id="s3">
+    <div class="fl f1" style="--d:0s"><div class="box"></div><div class="txt"><small>EVIDENCE 01</small><b>現場 DNA</b></div></div>
+    <div class="fl f2" style="--d:.75s"><div class="box"></div><div class="txt"><small>EVIDENCE 02</small><b>公開資料庫</b></div></div>
+    <div class="fl f3" style="--d:1.5s"><div class="box"></div><div class="txt"><small>EVIDENCE 03</small><b>遠親比對</b></div></div>
+    <div class="fl f4" style="--d:2.25s"><div class="box"></div><div class="txt"><small>EVIDENCE 04</small><b>警察敲門</b></div></div>
+  </div>
+
+  <div class="sc s4" id="s4">
+    <div class="in">
+      <span class="no">CASE FILE No.2018-0424</span>
+      <h1 class="ttl" id="ttl" aria-label="基因隱私事件簿"></h1>
+      <p class="sub">公共利益 <b>vs.</b> 個人隱私　你會怎麼判斷？</p>
+      <button class="go" id="go" type="button"><span>開始調查 ▸</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<canvas class="dust" id="dust" aria-hidden="true"></canvas>
+<div class="spot" aria-hidden="true"></div>
+<div class="ring" id="ring" aria-hidden="true"></div>
+<div class="app" id="app">
+
+  <!-- hub -->
+  <main id="hub">
+    <div class="top">
+      <div>
+        <span class="mono">CASE BOARD · 基因倫理思辨</span>
+        <h1>基因隱私<em>事件簿</em></h1>
+      </div>
+      <div class="prog">
+        <span class="mono" id="progTxt">已調查 0 / 7</span>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+        <button class="btn" id="cont" type="button" data-go="f1">開始調查 ▸</button>
+        <button class="btn ghost" id="replay" type="button">重播開場</button>
+      </div>
+    </div>
+    <div class="marq" aria-hidden="true"><div>
+      <span>金州殺手案</span><span>GEDMATCH</span><span>遠親比對</span><span>特種個資</span><span>知情權</span><span>四角辯論</span><span>角色代入</span><span>論點攻防</span>
+      <span>金州殺手案</span><span>GEDMATCH</span><span>遠親比對</span><span>特種個資</span><span>知情權</span><span>四角辯論</span><span>角色代入</span><span>論點攻防</span>
+    </div></div>
+    <div class="board" id="board"></div>
+    <p class="foot">點選任一份檔案開始，順序不限，每份約 3 到 6 分鐘。快捷鍵：<kbd>Esc</kbd> 回看板，<kbd>[</kbd> <kbd>]</kbd> 切換上下份檔案。進度只儲存在這個瀏覽器，<button id="reset" type="button">重置進度</button>。內容供教學與討論使用，不構成法律或醫療建議；所引用的案例數據與法規，請以官方與最新資料為準。</p>
+  </main>
+
+  <!-- f1 -->
+  <section class="view" id="f1" hidden>
+    <div class="vhead"><div><span class="mono">FILE 01</span><h2>案發現場</h2></div><div class="row"><button class="btn ghost" data-go="hub" type="button">◂ 案件看板</button><button class="btn" data-go="f2" type="button">下一份 ▸</button></div></div>
+    <div class="tabwrap">
+      <div class="tabs" role="tablist"><button role="tab" aria-selected="true" type="button">任務簡報</button><button role="tab" aria-selected="false" type="button">案件經過</button><button role="tab" aria-selected="false" type="button">為何棘手</button></div>
+      <div class="tp">
+        <div class="panel">
+          <p class="lead">想像你為了好玩，把自己的 DNA 數據上傳到商業基因檢測網站。幾年後，警察敲門告訴你：他們靠你的基因數據，找到了你多年未見的遠親，一名連續殺人犯。</p>
+          <p class="lead">這不是科幻電影，而是 2018 年的「金州殺手案」。當科技走得比法律還快，我們的基因隱私該何去何從？</p>
+        </div>
+        <div class="panel">
+          <h3>本課學習目標</h3>
+          <ol class="clean">
+            <li>掌握引導倫理討論的兩大核心技巧：角色代入與四角辯論。</li>
+            <li>探討公共利益與個人基因隱私之間的權衡與衝突。</li>
+            <li>學會用「論點攻防表」架構有說服力的思辨論點。</li>
+          </ol>
+        </div>
+      </div>
+      <div class="tp" hidden>
+        <div class="panel"><div class="steps"><div class="rail" id="rail" role="group" aria-label="案件步驟"></div><div class="stepbody" id="stepBody" aria-live="polite"></div></div>
+          <div class="row" style="margin-top:18px"><button class="btn ghost" id="stPrev" type="button">◂ 上一步</button><button class="btn" id="stNext" type="button">下一步 ▸</button></div>
+        </div>
+      </div>
+      <div class="tp" hidden>
+        <div class="g3">
+          <div class="panel"><h3>終身不變</h3><p>密碼可以換，基因換不了。一旦外流，影響是一輩子。</p></div>
+          <div class="panel"><h3>牽涉家族</h3><p>你與親屬共享一部分基因。嫌犯本人沒上傳，線索卻來自他的遠親。</p></div>
+          <div class="panel"><h3>預測未來</h3><p>基因可能透露尚未發生的疾病風險，牽動保險、就業與婚姻。</p></div>
+        </div>
+        <div class="panel"><h3>兩個數字</h3>
+          <p><b style="color:var(--spot)">約 60%</b>　2018 年《Science》研究估計，歐裔美國人中約六成，可在大型資料庫中找到三等親堂表以內的遠親。</p>
+          <p><b style="color:var(--spot)">2019</b>　GEDmatch 改為使用者需主動同意，才開放執法單位比對。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- f2 -->
+  <section class="view" id="f2" hidden>
+    <div class="vhead"><div><span class="mono">FILE 02</span><h2>偵訊技巧</h2></div><div class="row"><button class="btn ghost" data-go="f1" type="button">◂ 上一份</button><button class="btn ghost" data-go="hub" type="button">案件看板</button><button class="btn" data-go="f3" type="button">下一份 ▸</button></div></div>
+    <div class="tabwrap">
+      <div class="tabs" role="tablist"><button role="tab" aria-selected="true" type="button">角色代入</button><button role="tab" aria-selected="false" type="button">四角辯論</button></div>
+      <div class="tp">
+        <div class="g2">
+          <div class="panel">
+            <h3>技巧一：角色代入</h3>
+            <p>不要直接問「你覺得怎麼樣？」，學生容易腦袋一片空白。改給一個具體身分，例如「如果你是保險公司的經理，你會怎麼決定？」</p>
+            <p>有了角色當盾牌，學生更能體會不同立場的難處，也更敢發言。</p>
+            <div class="note">線上教學做法：用分組討論室，每組抽一個角色，5 分鐘後派代表以「我是○○，我認為……」開頭發言。</div>
+          </div>
+          <div class="panel">
+            <h3>抽一個角色</h3>
+            <div class="row" style="margin-bottom:14px"><button class="chip" id="rA" aria-pressed="true" type="button">情境 A：金州殺手案</button><button class="chip" id="rB" aria-pressed="false" type="button">情境 B：結婚前檢測</button></div>
+            <button class="btn" id="draw" type="button">抽角色</button>
+            <div class="role-out" id="roleOut" aria-live="polite"><span class="mono">按下按鈕，抽一個你要扮演的角色</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="tp" hidden>
+        <div class="panel">
+          <h3>技巧二：四角辯論</h3>
+          <p>教室四角分別貼上「完全同意、部分同意、部分不同意、完全不同意」。丟出題目後，學生用身體站位表態並說明原因，聽完他人意見後可以隨時改站位。線上教學可請學生在聊天室輸入 1 到 4，或直接使用下面的線上版。</p>
+        </div>
+        <div class="panel">
+          <span class="mono" id="cnt">題目 1 / 3</span>
+          <p class="qline" id="cq"></p>
+          <div class="corners" id="cbtns" role="group" aria-label="選擇立場"></div>
+          <div class="reply" id="creply" aria-live="polite">選擇一個立場，會出現追問。</div>
+          <div class="row" style="margin-top:16px"><button class="btn ghost" id="cPrev" type="button">◂ 上一題</button><button class="btn" id="cNext" type="button">下一題 ▸</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- f3 -->
+  <section class="view" id="f3" hidden>
+    <div class="vhead"><div><span class="mono">FILE 03</span><h2>道德天秤</h2></div><div class="row"><button class="btn ghost" data-go="f2" type="button">◂ 上一份</button><button class="btn ghost" data-go="hub" type="button">案件看板</button><button class="btn" data-go="f4" type="button">下一份 ▸</button></div></div>
+    <p style="margin-bottom:18px;color:var(--muted);max-width:40em">當「公共利益」或「他人的知情權」與「個人隱私」衝突，哪一方該優先？拖曳天秤，看看你的傾向落在哪裡。</p>
+    <div class="tabwrap">
+      <div class="tabs" role="tablist"><button role="tab" aria-selected="true" type="button">情境 A　公共安全 vs. 隱私</button><button role="tab" aria-selected="false" type="button">情境 B　知情權 vs. 隱私</button></div>
+      <div class="tp" id="scA">
+        <div class="panel"><p>警方在未經同意下，使用民眾主動上傳到商業家譜網站（如 GEDmatch）的 DNA 數據進行比對，成功逮捕消極避網數十年的連續殺人犯「金州殺手」。為了治安與抓捕重刑犯，警方有權使用這些並非授權給執法的數據嗎？今天為了抓罪犯妥協，明天這項科技會不會被用來監控政治異議者？</p></div>
+        <div class="panel bal" id="balA"></div>
+        <div class="g2 vs" style="margin-top:16px"><div class="l"><b>隱私方會說</b>今天抓罪犯，明天就可能監控異議者；沒上傳的親戚也被牽連，資料庫還可能被駭。</div><div class="r"><b>公共利益方會說</b>重大暴力案件的受害者也有權被看見；資料本來就是使用者自己公開上傳的。</div></div>
+        <div class="panel"><h3>討論問題</h3><ol class="clean"><li>「主動上傳」算不算同意被警方使用？</li><li>如果只限殺人與性侵案，界線夠清楚嗎？</li><li>你沒上傳，但表哥上傳了，你的隱私還在嗎？</li></ol>
+          <div class="note">事件後，美國部分州（如馬里蘭州、蒙大拿州）陸續立法規範「法醫基因譜系」的使用條件。各州規定不同，請以最新資料為準。</div></div>
+      </div>
+      <div class="tp" id="scB" hidden>
+        <div class="panel"><p>你透過檢測，發現自己攜帶「阿茲海默症高風險」基因（例如 APOE ε4）。結婚前，你有義務主動告訴伴侶嗎？這究竟是誠實與對伴侶負責的表現，還是不容侵犯的個人隱私？</p></div>
+        <div class="panel bal" id="balB"></div>
+        <div class="g2 vs" style="margin-top:16px"><div class="l"><b>隱私方會說</b>高風險不等於一定發病；被迫揭露，可能造成歧視與關係壓力。</div><div class="r"><b>知情權方會說</b>婚姻牽涉長期照顧、財務與生育決定，伴侶有權在知情下做選擇。</div></div>
+        <div class="panel"><h3>討論問題</h3><ol class="clean"><li>「風險」與「確定會發生」，在告知義務上有差別嗎？</li><li>如果你是遺傳諮詢師，你會建議怎麼說？</li><li>這份資訊也影響兄弟姊妹與子女，他們有知情權嗎？</li></ol>
+          <div class="note">APOE ε4 帶來的是較高的機率，並非診斷。解讀基因風險需要專業諮詢。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- f4 -->
+  <section class="view" id="f4" hidden>
+    <div class="vhead"><div><span class="mono">FILE 04</span><h2>攻防推理</h2></div><div class="row"><button class="btn ghost" data-go="f3" type="button">◂ 上一份</button><button class="btn ghost" data-go="hub" type="button">案件看板</button><button class="btn" data-go="f5" type="button">下一份 ▸</button></div></div>
+    <p style="margin-bottom:18px;color:var(--muted);max-width:40em">辯論中只說「我覺得」是不夠的。論點攻防表用四個格子，把立場、對手的反擊、證據與回應放在同一頁。下方已填入範例，可以直接改寫成你的版本。</p>
+    <div class="panel">
+      <div class="row" style="margin-bottom:18px"><button class="btn ghost" id="exPro" type="button">範例：支持警方使用</button><button class="btn ghost" id="exCon" type="button">範例：反對警方使用</button><button class="btn ghost" id="exClr" type="button">清空重寫</button></div>
+      <div class="ab">
+        <div class="f k"><label for="f1t">① 我方核心論點 (Claim)<small>明確表達基本立場</small></label><textarea id="f1t"></textarea></div>
+        <div class="f c"><label for="f2t">② 預測對方攻擊點 (Counter-claim)<small>換位思考，對手會怎麼反擊</small></label><textarea id="f2t"></textarea></div>
+        <div class="f k"><label for="f3t">③ 證據與案例 (Evidence)<small>用事實說話</small></label><textarea id="f3t"></textarea></div>
+        <div class="f c"><label for="f4t">④ 如何反駁 (Rebuttal)<small>針對攻擊點，有邏輯地回擊</small></label><textarea id="f4t"></textarea></div>
+      </div>
+      <div class="row" style="margin-top:18px"><button class="btn" id="copyAb" type="button">複製成文字</button><span class="toast" id="abToast" aria-live="polite"></span></div>
+      <div class="note">自我檢查：論點能用一句話說完嗎？② 是對手最強的反擊，而不是最弱的嗎？③ 的證據能被查證嗎？④ 是在回應 ②，還是只在重複 ①？</div>
+    </div>
+  </section>
+
+  <!-- f5 -->
+  <section class="view" id="f5" hidden>
+    <div class="vhead"><div><span class="mono">FILE 05</span><h2>延伸調查</h2></div><div class="row"><button class="btn ghost" data-go="f4" type="button">◂ 上一份</button><button class="btn ghost" data-go="hub" type="button">案件看板</button><button class="btn" data-go="f6" type="button">下一份 ▸</button></div></div>
+    <div class="tabwrap">
+      <div class="tabs" role="tablist"><button role="tab" aria-selected="true" type="button">台灣與保險現場</button><button role="tab" aria-selected="false" type="button">上傳前的五個自問</button></div>
+      <div class="tp" id="accs"></div>
+      <div class="tp" hidden>
+        <div class="panel">
+          <h3>把自己放進案件裡</h3>
+          <p>勾選你已經想清楚的項目。沒辦法回答的，就是該先搞懂的地方。</p>
+          <div class="chk" id="chk"></div>
+          <div class="meter" aria-hidden="true"><i id="meter"></i></div>
+          <p class="mono" id="chkTxt" style="margin-top:8px">已確認 0 / 5</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- f6 -->
+  <section class="view" id="f6" hidden>
+    <div class="vhead"><div><span class="mono">FILE 06</span><h2>破案測驗</h2></div><div class="row"><button class="btn ghost" data-go="f5" type="button">◂ 上一份</button><button class="btn ghost" data-go="hub" type="button">案件看板</button><button class="btn" data-go="f7" type="button">下一份 ▸</button></div></div>
+    <div class="panel" id="quiz"></div>
+  </section>
+
+  <!-- f7 -->
+  <section class="view" id="f7" hidden>
+    <div class="vhead"><div><span class="mono">FILE 07</span><h2>結案報告</h2></div><div class="row"><button class="btn ghost" data-go="f6" type="button">◂ 上一份</button><button class="btn" data-go="hub" type="button">回案件看板</button></div></div>
+    <div class="tabwrap">
+      <div class="tabs" role="tablist"><button role="tab" aria-selected="true" type="button">課程總結</button><button role="tab" aria-selected="false" type="button">給引導者：45 分鐘流程</button></div>
+      <div class="tp">
+        <div class="g3">
+          <div class="panel"><h3>引導技巧</h3><p>「角色代入」降低發言門檻，「四角辯論」讓抽象觀點看得見，兩者都能活化課堂討論。</p></div>
+          <div class="panel"><h3>倫理衝突</h3><p>基因隱私不只是個人私事。在公共安全與親密關係中，都牽涉公共利益、知情權與隱私權的拉扯。</p></div>
+          <div class="panel"><h3>思辨能力</h3><p>高品質的辯論要有論點、預測反擊、證據與反駁，缺一不可。</p></div>
+        </div>
+        <p class="quote">科技的發展永無止境。如何在享受便利的同時，守住人權與隱私的底線，是每個人都要持續思考的課題。</p>
+      </div>
+      <div class="tp" hidden>
+        <div class="tw"><table>
+          <thead><tr><th>時間</th><th>活動</th><th>做法</th></tr></thead>
+          <tbody>
+            <tr><td class="t">0–5'</td><td>開場故事</td><td>講述金州殺手案，問：「你上傳過任何生物資料嗎？」</td></tr>
+            <tr><td class="t">5–12'</td><td>四角辯論</td><td>三個表態題，每題請兩位說明理由，允許改站位。</td></tr>
+            <tr><td class="t">12–27'</td><td>角色代入</td><td>分組抽角色，討論情境 A 或 B，每組派代表發言。</td></tr>
+            <tr><td class="t">27–38'</td><td>論點攻防表</td><td>個人填寫後與鄰座交換，讓對方扮演「對手」提出攻擊。</td></tr>
+            <tr><td class="t">38–45'</td><td>總結與反思</td><td>請學生寫下「我最初的立場」與「我現在的立場」。</td></tr>
+          </tbody></table></div>
+        <p class="note">人數少於 12 人時，可省略分組。線上授課可把四角辯論改成聊天室輸入 1 到 4。</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS='http://www.w3.org/2000/svg';
+
+  /* ===== seeded random ===== */
+  function rng(seed){var s=seed;return function(){s=(s*1664525+1013904223)%4294967296;return s/4294967296}}
+
+  /* ===== intro art: city ===== */
+  (function(){
+    var r=rng(7),h='';
+    for(var i=0;i<46;i++){h+='<circle cx="'+(r()*400).toFixed(1)+'" cy="'+(r()*110).toFixed(1)+'" r="'+(0.4+r()*0.8).toFixed(2)+'" fill="#fff" opacity="'+(0.3+r()*0.6).toFixed(2)+'"/>'}
+    h+='<circle cx="300" cy="104" r="60" fill="#FFD166" opacity=".10"/><circle cx="300" cy="104" r="46" fill="#FFF1C9"/><circle cx="288" cy="94" r="9" fill="#F3DFA6" opacity=".6"/><circle cx="314" cy="118" r="6" fill="#F3DFA6" opacity=".5"/>';
+    var x=-6,b=[];
+    while(x<410){var w=22+Math.floor(r()*26),t=110+Math.floor(r()*86);b.push([x,w,t]);x+=w+2}
+    b.forEach(function(q,k){
+      if(q[0]<=260&&q[0]+q[1]>=240)q[2]=176; /* rooftop for detective */
+      h+='<rect x="'+q[0]+'" y="'+q[2]+'" width="'+q[1]+'" height="'+(240-q[2])+'" fill="#060918"/>';
+      for(var wx=q[0]+4;wx<q[0]+q[1]-5;wx+=8){for(var wy=q[2]+8;wy<232;wy+=11){
+        if(r()<0.22)h+='<rect class="win" x="'+wx+'" y="'+wy+'" width="3.5" height="5" style="animation-delay:-'+(r()*3).toFixed(2)+'s;animation-duration:'+(2+r()*3).toFixed(1)+'s"/>';
+      }}
+    });
+    h+='<rect x="262" y="176" width="76" height="64" fill="#060918"/>';
+    /* generic trench-coat detective silhouette (original) */
+    h+='<g transform="translate(300,176)" fill="#02030A" stroke="#02030A" stroke-linejoin="round">'
+      +'<path d="M-13,-62 Q0,-68 13,-62 L25,0 L-25,0 Z"/>'
+      +'<path d="M-13,-62 L-24,-30 L-14,-28 Z"/>'
+      +'<circle cx="0" cy="-72" r="8"/>'
+      +'<ellipse cx="0" cy="-78" rx="18" ry="3.4"/>'
+      +'<path d="M-9,-78 Q-9,-93 0,-93 Q9,-93 9,-78 Z"/>'
+      +'<path d="M10,-58 L27,-70" fill="none" stroke-width="4.5" stroke-linecap="round"/>'
+      +'<circle cx="34" cy="-79" r="9" fill="rgba(255,209,102,.18)" stroke="#FFD166" stroke-width="2.5"/>'
+      +'<line x1="28" y1="-72" x2="22" y2="-66" stroke="#FFD166" stroke-width="3" stroke-linecap="round"/>'
+      +'</g>';
+    h+='<path class="glint" d="M38,-88 l2,-7 l2,7 l7,2 l-7,2 l-2,7 l-2,-7 l-7,-2z" transform="translate(300,176)"/>';
+    $('#citySvg').innerHTML=h;
+  })();
+
+  /* ===== intro art: helix ===== */
+  (function(){
+    var p1='',p2='',rungs='';
+    for(var x=20;x<=380;x+=4){
+      var a=Math.sin((x-20)/22)*44;
+      p1+=(x===20?'M':'L')+x+','+(120+a).toFixed(1)+' ';
+      p2+=(x===20?'M':'L')+x+','+(120-a).toFixed(1)+' ';
+    }
+    for(var rx=26;rx<=380;rx+=11){
+      var aa=Math.sin((rx-20)/22)*44;
+      rungs+='<line class="rung" style="--d:'+(0.5+((rx-20)/360)*2.6).toFixed(2)+'s" x1="'+rx+'" y1="'+(120+aa).toFixed(1)+'" x2="'+rx+'" y2="'+(120-aa).toFixed(1)+'"/>';
+    }
+    $('#helix').innerHTML=rungs+'<path class="strand" pathLength="1" d="'+p1+'"/><path class="strand" pathLength="1" d="'+p2+'"/>';
+  })();
+
+  /* ===== intro art: title ===== */
+  (function(){
+    var t='基因隱私事件簿',h='';
+    t.split('').forEach(function(c,i){h+='<span style="--i:'+i+'">'+c+'</span>'});
+    $('#ttl').innerHTML=h;
+  })();
+
+  /* ===== intro timeline ===== */
+  var intro=$('#intro'),appEl=$('#app'),root=document.documentElement,scs=['s1','s2','s3','s4'].map(function(i){return document.getElementById(i)});
+  var timers=[],cur=-1,tcT=null,t0=0;
+  function scene(n){
+    cur=n;
+    scs.forEach(function(s,i){s.classList.toggle('on',i===n)});
+    if(n===3){
+      intro.classList.remove('play');clearInterval(tcT);
+      $('#skip').hidden=true;$('#hint').hidden=true;$('#hud').hidden=true;
+      setTimeout(function(){try{$('#go').focus({preventScroll:true})}catch(e){}},reduce?100:2200);
+    }
+  }
+  function clearT(){timers.forEach(clearTimeout);timers=[]}
+  function tick(){
+    var s=Math.min(99,Math.floor((Date.now()-t0)/1000));
+    $('#tc').textContent='REC 00:'+(s<10?'0':'')+s;
+  }
+  function playIntro(){
+    clearT();clearInterval(tcT);
+    intro.classList.remove('out','play');intro.hidden=false;appEl.inert=true;
+    scs.forEach(function(s){s.classList.remove('on')});
+    $('#skip').hidden=false;$('#hint').hidden=false;$('#hud').hidden=false;
+    void intro.offsetWidth;
+    if(reduce){scene(3);return}
+    intro.classList.add('play');
+    t0=Date.now();tick();tcT=setInterval(tick,250);
+    scene(0);
+    timers.push(setTimeout(function(){scene(1)},3800));
+    timers.push(setTimeout(function(){scene(2)},7400));
+    timers.push(setTimeout(function(){scene(3)},10400));
+  }
+  function closeIntro(){
+    intro.classList.add('out');appEl.inert=false;
+    setTimeout(function(){intro.hidden=true;scene(-1);var h=$('#hub h1');if(h){h.tabIndex=-1;try{h.focus({preventScroll:true})}catch(e){}}},950);
+  }
+  function skipIntro(){clearT();scene(3)}
+  $('#skip').onclick=skipIntro;
+  $('#go').onclick=closeIntro;
+  $('#replay').onclick=function(){go('hub');setTimeout(playIntro,reduce?0:750)};
+
+  /* ===== nav / views ===== */
+  var files=[
+    ['f1','案發現場','金州殺手案的來龍去脈，與為何基因資料特別棘手。'],
+    ['f2','偵訊技巧','角色代入與四角辯論，讓討論不再冷場。'],
+    ['f3','道德天秤','公共安全、知情權與隱私，拖曳天秤看傾向。'],
+    ['f4','攻防推理','用論點攻防表，建立能被檢驗的論點。'],
+    ['f5','延伸調查','台灣法規、保險核保，與上傳前的自問。'],
+    ['f6','破案測驗','4 題小測驗，確認你抓到重點了。'],
+    ['f7','結案報告','課程總結，與給引導者的 45 分鐘流程。']
+  ];
+  var KEY='gene-case-board-v1',visited={},board=$('#board'),dots=$('#dots');
+  try{var sv=JSON.parse(localStorage.getItem(KEY)||'{}');if(sv&&typeof sv==='object')visited=sv}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(visited))}catch(e){}}
+  files.forEach(function(f,i){
+    var b=document.createElement('button');b.type='button';b.className='tile';b.dataset.go=f[0];b.style.setProperty('--i',i);
+    b.innerHTML='<span class="big">'+(i+1)+'</span><div><div class="no">FILE 0'+(i+1)+'</div><h3>'+f[1]+'</h3></div><p>'+f[2]+'</p><span class="stamp">已調查</span>';
+    board.appendChild(b);
+    var d=document.createElement('i');dots.appendChild(d);
+  });
+  function prog(){
+    var n=0;
+    files.forEach(function(f,i){
+      var on=!!visited[f[0]];if(on)n++;
+      board.children[i].classList.toggle('done',on);
+      dots.children[i].classList.toggle('on',on);
+    });
+    $('#progTxt').textContent=(n===7?'全數調查完畢 ':'已調查 ')+n+' / 7';
+    var nx=files.filter(function(f){return !visited[f[0]]})[0],c=$('#cont');
+    if(!nx){c.dataset.go='f7';c.textContent='回顧結案報告 ▸'}
+    else{c.dataset.go=nx[0];c.textContent=(n?'繼續：':'開始：')+nx[1]+' ▸'}
+  }
+  var views=['hub'].concat(files.map(function(f){return f[0]})),curView='hub';
+  function show(id,silent){
+    curView=id;
+    views.forEach(function(v){document.getElementById(v).hidden=(v!==id)});
+    if(id!=='hub'&&!visited[id]){visited[id]=1;save()}
+    if(window.track)track(id==='hub'?'ethics':'ethics-'+id,id==='hub'?'基因隱私與倫理':'倫理 '+id,false);
+    prog();
+    if(!silent){
+      window.scrollTo(0,0);
+      var h=document.querySelector('#'+id+' h1, #'+id+' h2');
+      if(h){h.tabIndex=-1;try{h.focus({preventScroll:true})}catch(e){}}
+    }
+    try{history.replaceState(null,'',id==='hub'?'#':'#'+id)}catch(e){}
+  }
+  /* page change: iris wipe from the click point when the browser supports view transitions */
+  function go(id,e){
+    var x=innerWidth/2,y=innerHeight/2;
+    if(e&&(e.clientX||e.clientY)){x=e.clientX;y=e.clientY}
+    root.style.setProperty('--vx',x+'px');root.style.setProperty('--vy',y+'px');
+    var run=function(){show(id)};
+    if(document.startViewTransition&&!reduce&&intro.hidden){try{document.startViewTransition(run);return}catch(err){}}
+    run();
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-go]');if(!t)return;
+    go(t.dataset.go,e);
+  });
+  $('#reset').onclick=function(){visited={};save();prog()};
+  document.addEventListener('keydown',function(e){
+    if(!intro.hidden&&!intro.classList.contains('out')){
+      if(cur>=0&&cur<3&&(e.key===' '||e.key==='Enter'||e.key==='Escape')){e.preventDefault();skipIntro()}
+      return;
+    }
+    if(e.metaKey||e.ctrlKey||e.altKey)return;
+    var tg=e.target&&e.target.tagName;
+    if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT')return;
+    var i=views.indexOf(curView);
+    if(e.key==='Escape'&&curView!=='hub')go('hub');
+    else if(e.key===']'&&i<views.length-1)go(views[i+1]);
+    else if(e.key==='['&&i>1)go(views[i-1]);
+  });
+
+  /* ===== generic tabs ===== */
+  $$('.tabwrap').forEach(function(w){
+    var btns=$$(':scope > .tabs button',w),ps=$$(':scope > .tp',w);
+    function sel(i){
+      btns.forEach(function(x,j){x.setAttribute('aria-selected',j===i);x.tabIndex=j===i?0:-1});
+      ps.forEach(function(p,j){p.hidden=(j!==i)});
+    }
+    ps.forEach(function(p){p.setAttribute('role','tabpanel')});
+    btns.forEach(function(b,i){
+      b.tabIndex=i===0?0:-1;
+      b.onclick=function(){sel(i)};
+      b.onkeydown=function(e){
+        var n=e.key==='ArrowRight'?i+1:e.key==='ArrowLeft'?i-1:e.key==='Home'?0:e.key==='End'?btns.length-1:null;
+        if(n==null)return;
+        n=(n+btns.length)%btns.length;e.preventDefault();sel(n);btns[n].focus();
+      };
+    });
+  });
+
+  /* ===== f1 stepper ===== */
+  var st=[
+    ['現場留下 DNA','1970 到 1980 年代的案件現場，警方保存了嫌犯留下的 DNA，但在既有的執法資料庫裡比對不到任何人。案子擱置了數十年。'],
+    ['上傳公開資料庫','調查人員把現場 DNA 轉成可比對的格式，上傳到公開的家譜網站 GEDmatch。這個網站裡的資料，是一般民眾為了找親戚而自願上傳的。'],
+    ['找到幾位遠親','比對結果出現幾位遠房親戚。嫌犯本人從未上傳過資料，線索卻透過親屬的基因找上門。'],
+    ['家族樹推理','調查人員建立家族樹，依年齡、居住地與家庭背景逐步縮小範圍，最後鎖定一人，並以其丟棄物上的 DNA 驗證。'],
+    ['逮捕與認罪','2018 年 4 月嫌犯被捕，2020 年認罪，被判無期徒刑且不得假釋。案件偵破，也引發「警方能否使用這類資料」的全球討論。']
+  ];
+  var si=0,seen={0:1},rail=$('#rail');
+  st.forEach(function(s,i){var b=document.createElement('button');b.type='button';b.textContent=i+1;b.setAttribute('aria-label','步驟 '+(i+1)+'：'+s[0]);b.onclick=function(){si=i;rs()};rail.appendChild(b)});
+  function rs(){
+    seen[si]=1;
+    $$('button',rail).forEach(function(b,i){b.classList.toggle('on',i===si);b.classList.toggle('seen',!!seen[i])});
+    $('#stepBody').innerHTML='<span class="tag">STEP '+(si+1)+' / 5</span><h3>'+st[si][0]+'</h3><p>'+st[si][1]+'</p>';
+    $('#stPrev').disabled=si===0;$('#stNext').disabled=si===st.length-1;
+  }
+  $('#stPrev').onclick=function(){if(si>0){si--;rs()}};
+  $('#stNext').onclick=function(){if(si<st.length-1){si++;rs()}};
+  rs();
+
+  /* ===== f2 roles ===== */
+  var roles={
+    A:[['警政署長','你負責破案率與社會治安，也要面對外界對監控的質疑。你會怎麼決定？'],['家譜網站經營者','用戶信任你才上傳資料。警方來函要求比對，你怎麼回應？'],['被害人家屬','案件懸而未決數十年。你支持使用一切可用的科技嗎？'],['公民自由團體律師','你最擔心哪一個「滑坡」？你會要求哪些法律限制？'],['上傳者的遠房親戚','你從沒上傳過資料，卻因為表哥上傳而被查到。你怎麼想？'],['立法委員','你要為此草擬法案。你會設定哪些門檻與監督機制？']],
+    B:[['當事人','你剛得知自己是高風險基因攜帶者，婚期在即。你會怎麼做？'],['伴侶','你後來才發現對方隱瞞了這件事。你在意的是風險，還是隱瞞？'],['遺傳諮詢師','你要如何協助當事人理解風險，並討論是否告知？'],['保險公司經理','你應該要求客戶提供基因檢測結果嗎？底線在哪裡？'],['婚姻律師','如果日後爭議鬧上法院，你如何看「隱瞞」的責任？'],['當事人的兄弟姊妹','這份結果也暗示你可能攜帶相同基因。你想知道嗎？']]
+  };
+  var rc='A',rl=-1;
+  function setR(k){rc=k;rl=-1;$('#rA').setAttribute('aria-pressed',k==='A');$('#rB').setAttribute('aria-pressed',k==='B')}
+  $('#rA').onclick=function(){setR('A')};$('#rB').onclick=function(){setR('B')};
+  $('#draw').onclick=function(){
+    var l=roles[rc],i;do{i=Math.floor(Math.random()*l.length)}while(i===rl);rl=i;
+    $('#roleOut').innerHTML='<span class="mono">你的角色</span><b>'+l[i][0]+'</b><span>'+l[i][1]+'</span>';
+  };
+
+  /* ===== f2 corners ===== */
+  var cs=[
+    {t:'警方可以使用民眾自願上傳到商業家譜網站的資料，偵辦重大暴力案件。',h:['你認為「自願上傳」等同於同意被警方使用嗎？','哪些條件要加上去，你才會完全同意？','最讓你不放心的是哪一個環節？','你能接受任何例外嗎？例如兒童綁架案？']},
+    {t:'發現自己帶有高風險遺傳基因時，結婚前必須主動告訴伴侶。',h:['如果對方因此取消婚約，你仍然同意嗎？','哪些情況你認為不必告知？','你認為告知的時機應該在什麼時候？','如果伴侶日後需要照顧你，這會改變你的想法嗎？']},
+    {t:'保險公司有權要求投保人提供基因檢測結果，作為核保參考。',h:['那「不願提供」的人該怎麼辦？','你會限定哪些險種或保額？','你擔心的是歧視，還是資料外洩？','這樣會不會讓高風險者無法獲得保障？']}
+  ];
+  var cl=['完全同意','部分同意','部分不同意','完全不同意'],ci=0,cpick={};
+  function rc2(){
+    $('#cnt').textContent='題目 '+(ci+1)+' / '+cs.length;
+    $('#cq').textContent=cs[ci].t;
+    var h='';cl.forEach(function(l,i){h+='<button type="button" class="corner" data-i="'+i+'" aria-pressed="'+(cpick[ci]===i)+'">'+l+'</button>'});
+    $('#cbtns').innerHTML=h;
+    $('#creply').textContent=cpick[ci]!=null?('請說明：'+cs[ci].h[cpick[ci]]+' 聽完別人的想法後，可以改變你的站位。'):'選擇一個立場，會出現追問。';
+    $('#cPrev').disabled=ci===0;$('#cNext').disabled=ci===cs.length-1;
+  }
+  $('#cbtns').addEventListener('click',function(e){var b=e.target.closest('.corner');if(!b)return;cpick[ci]=+b.dataset.i;rc2()});
+  $('#cPrev').onclick=function(){if(ci>0){ci--;rc2()}};
+  $('#cNext').onclick=function(){if(ci<cs.length-1){ci++;rc2()}};
+  rc2();
+
+  /* ===== f3 balance ===== */
+  function balance(root,cfg){
+    root.innerHTML='<svg viewBox="0 0 320 210" role="img" aria-label="天秤"></svg><div class="ends"><span>◂ '+cfg.l+'</span><span>'+cfg.r+' ▸</span></div><input type="range" min="0" max="100" value="50" aria-label="'+cfg.l+' 與 '+cfg.r+' 的傾向"><div class="read" aria-live="polite"></div>';
+    var svg=$('svg',root),inp=$('input',root),rd=$('.read',root);
+    function draw(){
+      var v=+inp.value,th=(v-50)/50*13*Math.PI/180,L=112,px=160,py=50;
+      var rx=px+L*Math.cos(th),ry=py+L*Math.sin(th),lx=px-L*Math.cos(th),ly=py-L*Math.sin(th);
+      function pan(x,y,col,lab){
+        return '<line x1="'+x+'" y1="'+y+'" x2="'+(x-30)+'" y2="'+(y+56)+'" stroke="#A3AECF" stroke-width="1.5"/><line x1="'+x+'" y1="'+y+'" x2="'+(x+30)+'" y2="'+(y+56)+'" stroke="#A3AECF" stroke-width="1.5"/>'
+          +'<path d="M'+(x-34)+','+(y+56)+' Q'+x+','+(y+84)+' '+(x+34)+','+(y+56)+' Z" fill="'+col+'"/>'
+          +'<text x="'+x+'" y="'+(y+50)+'" text-anchor="middle" font-size="12" font-weight="700" fill="#ECEFF8">'+lab+'</text>';
+      }
+      svg.innerHTML='<rect x="146" y="188" width="28" height="8" rx="2" fill="#2C3868"/><line x1="160" y1="50" x2="160" y2="188" stroke="#2C3868" stroke-width="5"/>'
+        +'<line x1="'+lx.toFixed(1)+'" y1="'+ly.toFixed(1)+'" x2="'+rx.toFixed(1)+'" y2="'+ry.toFixed(1)+'" stroke="#ECEFF8" stroke-width="5" stroke-linecap="round"/><circle cx="160" cy="50" r="7" fill="#FFD166"/>'
+        +pan(lx.toFixed(1)*1,ly.toFixed(1)*1,'#5EEAD4','')+pan(rx.toFixed(1)*1,ry.toFixed(1)*1,'#FFD166','');
+      var k=v<=12?0:v<=37?1:v<=62?2:v<=87?3:4;
+      rd.innerHTML='<b style="color:var(--spot)">'+cfg.lv[k][0]+'</b>　'+cfg.lv[k][1];
+    }
+    inp.addEventListener('input',draw);draw();
+  }
+  balance($('#balA'),{l:'個人隱私',r:'公共利益',lv:[
+    ['極度重視隱私','即使是重大案件，也要取得本人明確同意。你最擔心的是科技一旦開了口子就收不回來。'],
+    ['偏向隱私','可以有例外，但需要法官令狀、明確罪名清單與事後公開報告。'],
+    ['天秤平衡','你看見兩邊的理由都成立。下一步要回答：誰來決定界線，出錯時怎麼救濟？'],
+    ['偏向公共利益','重大暴力案件可以使用，但要配合資安規範與嚴格的使用限制。'],
+    ['極度重視公共利益','只要能抓到重犯、保護社會，資料庫都應該開放。請準備好回應「滑坡」的質疑。']]});
+  balance($('#balB'),{l:'個人隱私',r:'伴侶知情權',lv:[
+    ['極度重視隱私','風險屬於個人，沒有人有權要求你揭露。你最擔心的是歧視與關係壓力。'],
+    ['偏向隱私','不必主動說，但若伴侶直接詢問，不應欺騙。'],
+    ['天秤平衡','你看見誠實與隱私都重要。下一步要想：什麼時機、用什麼方式說出來最合適？'],
+    ['偏向知情權','重大決定前應該主動說明，並且附上專業諮詢，避免恐慌。'],
+    ['極度重視知情權','婚姻建立在完整資訊上，任何影響未來的健康風險都應該在結婚前說明。']]});
+
+  /* ===== f4 builder ===== */
+  var ex={
+    pro:['公共利益大於個人隱私。為了社會安全，警方應被允許使用使用者自願上傳的公開資料庫，偵辦殺人、性侵等重大暴力案件。','對方可能質疑：今天抓罪犯，明天就會監控政治異議者；而且資料庫可能被駭客入侵。','金州殺手案：拖延數十年的重大懸案，因遠親比對而在 2018 年偵破。受害者與家屬因此得到交代。','需要的是更嚴格的法律，限制使用範圍、要求司法授權並強化資安，而不是直接禁止一項能造福社會的科技。'],
+    con:['基因是終身不變且牽涉整個家族的資料。未經本人明確同意，警方不應使用商業資料庫進行比對。','對方可能說：這些是用戶自己公開上傳的，而且能抓到重大罪犯、保護潛在受害者。','2018 年《Science》研究估計，大型資料庫已能讓多數歐裔美國人被遠親比對到。你沒上傳，也可能被辨識出來。','被害人的正義很重要，但可以透過司法令狀與獨立審查達成，而不是讓未同意的親屬成為附帶對象。']
+  };
+  var ft=['f1t','f2t','f3t','f4t'].map(function(i){return document.getElementById(i)});
+  function loadEx(k){ft.forEach(function(el,i){el.value=ex[k][i]})}
+  loadEx('pro');
+  $('#exPro').onclick=function(){loadEx('pro')};$('#exCon').onclick=function(){loadEx('con')};
+  $('#exClr').onclick=function(){ft.forEach(function(el){el.value=''});ft[0].focus()};
+  $('#copyAb').onclick=function(){
+    var txt='【論點攻防表】\n① 我方核心論點：'+ft[0].value+'\n② 預測對方攻擊點：'+ft[1].value+'\n③ 證據與案例：'+ft[2].value+'\n④ 如何反駁：'+ft[3].value;
+    var tt=$('#abToast');
+    function done(m){tt.textContent=m;setTimeout(function(){tt.textContent=''},2500)}
+    function fb(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done('已複製')}catch(e){done('請手動選取文字複製')}document.body.removeChild(ta)}
+    try{navigator.clipboard.writeText(txt).then(function(){done('已複製')},fb)}catch(e){fb()}
+  };
+
+  /* ===== f5 accordion + checklist ===== */
+  var ac=[
+    ['法律怎麼看基因資料','台灣《個人資料保護法》把基因列為特種個資，原則上不得蒐集、處理或利用，僅在法定例外情形下可以。','商業檢測公司取得的「使用者同意」，算不算法定例外？同意的範圍包不包含警方與研究單位？'],
+    ['保險與核保','如果基因風險被納入核保，可能造成「高風險者買不到保險」。美國 2008 年的 GINA 法案禁止健康保險與就業上的基因歧視，但並未涵蓋人壽、失能與長照保險。','保險的運作仰賴風險分攤。當個人比保險公司更早知道自己的風險，這個平衡該由誰來守？'],
+    ['資料外洩與商業併購','基因檢測公司若被併購、破產或遭駭，你的資料去哪裡？2023 年也曾有商業基因檢測公司發生大規模帳號資料外洩事件。','密碼可以換，基因換不了。外洩之後，責任應該怎麼分配？']
+  ];
+  var ah='';
+  ac.forEach(function(a,i){ah+='<div class="acc"><button type="button" aria-expanded="'+(i===0)+'" data-i="'+i+'">'+a[0]+'</button><div class="bd" '+(i===0?'':'hidden')+'><p>'+a[1]+'</p><div class="think"><b>思辨題　</b>'+a[2]+'</div></div></div>'});
+  ah+='<p class="note">法規會修正，教學前請再確認最新條文與相關規定。</p>';
+  $('#accs').innerHTML=ah;
+  $('#accs').addEventListener('click',function(e){
+    var b=e.target.closest('.acc>button');if(!b)return;
+    var o=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',!o);b.nextElementSibling.hidden=o;
+  });
+  var cq=['我清楚這家公司的隱私政策與資料保存年限。','我同意資料被用於研究或執法嗎？我有沒有在設定中選擇退出？','我的親屬知道這件事嗎？他們可能因此受到什麼影響？','如果公司被併購、破產或遭駭，我的資料會怎麼處理？','我可以隨時刪除帳號資料，並要求銷毀檢體嗎？'];
+  var ch='';cq.forEach(function(q,i){ch+='<label><input type="checkbox" data-i="'+i+'"><span>'+q+'</span></label>'});
+  $('#chk').innerHTML=ch;
+  $('#chk').addEventListener('change',function(){
+    var n=$$('input:checked',$('#chk')).length;
+    $('#meter').style.width=(n/5*100)+'%';$('#chkTxt').textContent='已確認 '+n+' / 5'+(n===5?'　準備好了':'');
+  });
+
+  /* ===== f6 quiz ===== */
+  var qz=[
+    {q:'「四角辯論」最主要的好處是什麼？',o:['讓學生背誦標準答案','把抽象觀點用站位具體呈現，並允許隨時調整','讓老師快速決定誰對誰錯','避免學生彼此交談'],a:1,e:'站位讓觀點可見，聽完他人意見後還能改站位，是動態而包容的討論。'},
+    {q:'金州殺手案中，警方取得關鍵線索的方式是？',o:['從嫌犯本人的檢測紀錄比對','把現場 DNA 與公開家譜資料庫比對，找到遠親，再用家族樹縮小範圍','從醫院病歷直接調閱','由嫌犯自首'],a:1,e:'嫌犯本人並未上傳資料，線索來自親屬。這正是基因資料「牽涉家族」的體現。'},
+    {q:'「論點攻防表」中，為什麼要先預測對方的攻擊點？',o:['為了之後能有邏輯地反駁','為了讓對方放棄','為了避免提出證據','為了縮短辯論時間'],a:0,e:'換位思考能看見自己論點的弱點，並提前備好回應。'},
+    {q:'下列哪一項最能說明「基因隱私不只是個人的事」？',o:['基因檢測價格愈來愈低','親屬共享部分基因，一個人上傳可能間接揭露其他人','基因檢測報告是英文','DNA 可以儲存很久'],a:1,e:'你與親屬共享部分基因，所以個人的決定可能影響一整群人。'}
+  ];
+  var qi=0,res=[],qa=false,qb=$('#quiz');
+  function qr(){
+    if(qi>=qz.length){
+      var n=res.filter(Boolean).length;
+      qb.innerHTML='<div class="result"><div class="stamp">結案</div><div class="sc2">答對 '+n+' / '+qz.length+'</div><p>'+(n===qz.length?'全部答對，線索一個都沒漏掉。':'再回頭看看相關的檔案，下次更有把握。')+'</p><div class="row"><button class="btn ghost" id="qAgain" type="button">再測一次</button><button class="btn" data-go="f7" type="button">看結案報告 ▸</button></div></div>';
+      $('#qAgain').onclick=function(){qi=0;res=[];qr()};return;
+    }
+    qa=false;var it=qz[qi],h='<div class="qprog">';
+    qz.forEach(function(_,i){h+='<i class="'+(i<res.length?(res[i]?'ok':'no'):(i===qi?'on':''))+'"></i>'});
+    h+='</div><span class="mono">題目 '+(qi+1)+' / '+qz.length+'</span><p class="qline">'+it.q+'</p><div class="qopts">';
+    it.o.forEach(function(t,i){h+='<button type="button" class="opt" data-i="'+i+'">'+t+'</button>'});
+    h+='</div><p class="fb" id="fb" aria-live="polite"></p><div class="row"><button class="btn" id="qNext" type="button" disabled>'+(qi===qz.length-1?'看結果 ▸':'下一題 ▸')+'</button></div>';
+    qb.innerHTML=h;
+    $('#qNext').onclick=function(){qi++;qr()};
+  }
+  qb.addEventListener('click',function(e){
+    var b=e.target.closest('.opt');if(!b||qa)return;qa=true;
+    var it=qz[qi],i=+b.dataset.i,ok=i===it.a;res[qi]=ok;
+    $$('.opt',qb).forEach(function(x,j){x.disabled=true;if(j===it.a)x.classList.add('ok');else if(x===b)x.classList.add('no')});
+    $('#fb').textContent=(ok?'答對了。':'再想想。')+it.e;$('#qNext').disabled=false;
+    $$('.qprog i',qb)[qi].className=ok?'ok':'no';
+  });
+  qr();
+
+  /* ===== ambient light, dust, cursor ring, tilt, magnetic buttons ===== */
+  (function(){
+    var fine=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
+    var ring=$('#ring'),cv=$('#dust'),ctx=cv.getContext?cv.getContext('2d'):null;
+    var mx=innerWidth*0.5,my=innerHeight*0.3,rx=mx,ry=my,sx=mx,sy=my,W=0,H=0,P=[],dpr=1,mag=null,tilt=null;
+    function size(){
+      dpr=Math.min(window.devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+      cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+      if(ctx)ctx.setTransform(dpr,0,0,dpr,0,0);
+      var n=Math.min(90,Math.round(W*H/16000)),r=rng(21);P=[];
+      for(var i=0;i<n;i++)P.push({x:r()*W,y:r()*H,r:.5+r()*1.4,v:.08+r()*.22,a:.12+r()*.28,s:r()*6});
+    }
+    function draw(t){
+      if(!ctx)return;
+      ctx.clearRect(0,0,W,H);
+      for(var i=0;i<P.length;i++){
+        var p=P[i];
+        if(!reduce){p.y-=p.v;p.x+=Math.sin(t*0.0004+p.s)*0.12;if(p.y<-4){p.y=H+4;p.x=Math.random()*W}}
+        var dx=p.x-mx,dy=p.y-my,d=Math.sqrt(dx*dx+dy*dy),b=d<240?(1-d/240):0;
+        ctx.fillStyle='rgba(255,209,102,'+Math.min(.9,p.a+b*.55).toFixed(3)+')';
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r+b*1.2,0,6.283);ctx.fill();
+      }
+    }
+    function frame(t){
+      rx+=(mx-rx)*.2;ry+=(my-ry)*.2;sx+=(mx-sx)*.07;sy+=(my-sy)*.07;
+      if(fine)ring.style.transform='translate3d('+rx.toFixed(1)+'px,'+ry.toFixed(1)+'px,0)';
+      root.style.setProperty('--sx',sx.toFixed(1)+'px');root.style.setProperty('--sy',sy.toFixed(1)+'px');
+      draw(t);
+      if(!reduce)requestAnimationFrame(frame);
+    }
+    size();addEventListener('resize',size);frame(0);
+    function unmag(){if(mag){mag.style.removeProperty('--tx');mag.style.removeProperty('--ty');mag=null}}
+    function untilt(){if(tilt){tilt.style.removeProperty('--rx');tilt.style.removeProperty('--ry');tilt=null}}
+    addEventListener('pointermove',function(e){
+      mx=e.clientX;my=e.clientY;
+      if(e.pointerType!=='mouse')return;
+      if(reduce){rx=mx;ry=my;ring.style.transform='translate3d('+mx+'px,'+my+'px,0)'}
+      ring.classList.add('on');
+      var t=e.target;if(!t||!t.closest)return;
+      ring.classList.toggle('hot',!!t.closest('a,button,input,textarea,select,label,[role=tab]'));
+      var m=t.closest('.btn,.go');
+      if(mag&&mag!==m)unmag();
+      if(m&&!m.disabled&&!reduce){
+        var r=m.getBoundingClientRect();
+        m.style.setProperty('--tx',((e.clientX-r.left-r.width/2)*.18).toFixed(1)+'px');
+        m.style.setProperty('--ty',((e.clientY-r.top-r.height/2)*.28).toFixed(1)+'px');
+        mag=m;
+      }
+      var tl=t.closest('.tile');
+      if(tilt&&tilt!==tl)untilt();
+      if(tl&&!reduce){
+        var q=tl.getBoundingClientRect(),px=(e.clientX-q.left)/q.width,py=(e.clientY-q.top)/q.height;
+        tl.style.setProperty('--px',(px*100).toFixed(1)+'%');tl.style.setProperty('--py',(py*100).toFixed(1)+'%');
+        tl.style.setProperty('--rx',((.5-py)*7).toFixed(2)+'deg');tl.style.setProperty('--ry',((px-.5)*9).toFixed(2)+'deg');
+        tilt=tl;
+      }
+    },{passive:true});
+    addEventListener('pointerdown',function(){ring.classList.add('down')});
+    addEventListener('pointerup',function(){ring.classList.remove('down')});
+    document.addEventListener('mouseleave',function(){ring.classList.remove('on');unmag();untilt()});
+  })();
+
+  /* ===== boot ===== */
+  var hash=(location.hash||'').replace('#','');
+  if(views.indexOf(hash)>0){intro.hidden=true;show(hash,true)}
+  else{show('hub',true);playIntro()}
+})();
+</script>
+<p class="sitefoot">本頁為科普與公共討論用途，不構成法律或醫療建議。本站使用 GoatCounter 統計匿名瀏覽，不使用 Cookie、不蒐集個人資料。</p>
 </body>
 </html>

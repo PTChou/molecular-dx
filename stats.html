@@ -68,6 +68,8 @@
   </table>
   </div>
   <p class="legend"><b>點擊率</b>＝該集點開數 ÷ 首頁訪客；<b>完播率</b>＝看完 ÷ 播放（看到 95% 以上或播放結束才算看完）。直接用分享連結進入單集的觀眾也會算在點開數裡，所以點擊率可能超過 100%。</p>
+  <h2 style="font-family:var(--serif);margin-top:40px">倫理專區：基因隱私事件簿</h2>
+  <div class="scroll"><table class="tbl" id="eth"><thead><tr><th>檔案</th><th>訪客</th></tr></thead><tbody></tbody></table></div>
   <p style="margin-top:22px"><button class="btn" id="reload">重新整理數據</button> <button class="btn ghost" id="csv">下載 CSV</button></p>
 </main>
 
@@ -108,7 +110,7 @@ function load() {
       $("kDone").textContent = nf.format(done);
       $("kEthics").textContent = nf.format(ethics);
       $("upd").textContent = "更新於 " + new Date().toLocaleTimeString("zh-TW") + "。";
-      render();
+      render(); loadEthics();
     });
   }).catch(function (err) {
     $("msg").innerHTML = '<div class="err">讀取失敗（' + err.message + '）。請確認 GoatCounter 後台 Settings 已勾選「Allow adding visitor counts on your website」。</div>';
@@ -136,6 +138,16 @@ document.querySelector("#tbl thead").onclick = function (e) {
   if (sortK === th.dataset.k) sortDir = -sortDir; else { sortK = th.dataset.k; sortDir = th.dataset.k === "no" ? 1 : -1; }
   render();
 };
+var ETH = [["f1","案發現場"],["f2","偵訊技巧"],["f3","道德天秤"],["f4","攻防推理"],["f5","延伸調查"],["f6","破案測驗"],["f7","結案報告"]];
+function loadEthics() {
+  Promise.all(ETH.map(function (f) { return count("ethics-" + f[0]); })).then(function (v) {
+    var max = Math.max.apply(null, v.concat([1]));
+    document.querySelector("#eth tbody").innerHTML = ETH.map(function (f, i) {
+      return "<tr><td class='t'><span style='color:var(--teal);font-weight:700'>FILE 0" + (i + 1) + "</span> " + f[1] +
+        "<div class='bar'><i style='width:" + (v[i] / max * 100) + "%'></i></div></td><td>" + nf.format(v[i]) + "</td></tr>";
+    }).join("");
+  }).catch(function () {});
+}
 $("reload").onclick = load;
 $("csv").onclick = function () {
   var h = ["集數", "標題", "點開", "點擊率", "播放", "看一半", "看完", "完播率", "分享"];

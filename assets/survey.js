@@ -114,10 +114,17 @@
   // 觸發 1：關閉播放視窗（看過一半以上）
   document.addEventListener("DOMContentLoaded", function () {
     var dlg = document.getElementById("dlg");
-    if (dlg) dlg.addEventListener("close", function () {
-      refreshTab();
-      if (ss("survey.engaged") === "1") setTimeout(function () { show("關閉影片"); }, 400);
-    });
+    if (!dlg) return;
+    // 用 open 屬性變化偵測關閉（部分瀏覽器不觸發 dialog 的 close 事件）
+    var wasOpen = dlg.open;
+    new MutationObserver(function () {
+      var nowOpen = dlg.hasAttribute("open");
+      if (wasOpen && !nowOpen) {
+        refreshTab();
+        if (ss("survey.engaged") === "1") setTimeout(function () { show("關閉影片"); }, 400);
+      }
+      wasOpen = nowOpen;
+    }).observe(dlg, { attributes: true, attributeFilter: ["open"] });
   });
   // 觸發 2：電腦版滑鼠移出視窗頂端
   document.addEventListener("mouseout", function (e) {

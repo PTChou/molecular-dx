@@ -68,6 +68,17 @@
   </table>
   </div>
   <p class="legend"><b>點擊率</b>＝該集點開數 ÷ 首頁訪客；<b>完播率</b>＝看完 ÷ 播放（看到 95% 以上或播放結束才算看完）。直接用分享連結進入單集的觀眾也會算在點開數裡，所以點擊率可能超過 100%。</p>
+  <h2 style="font-family:var(--serif);margin-top:40px">觀後問卷</h2>
+  <div class="kpis" style="margin-bottom:14px">
+    <div class="kpi"><b id="sPer100">—</b><span>每 100 位訪客點進問卷</span></div>
+    <div class="kpi"><b id="sShow">—</b><span>邀請彈窗跳出</span></div>
+    <div class="kpi"><b id="sOpen">—</b><span>點開問卷</span></div>
+    <div class="kpi"><b id="sRate">—</b><span>彈窗點開率（點開 ÷ 跳出）</span></div>
+    <div class="kpi"><b id="sLater">—</b><span>按「下次再說」</span></div>
+  </div>
+  <div class="bar" style="height:12px;margin:0 0 6px" title="跳出後的反應"><i id="sBar" style="width:0"></i></div>
+  <p class="legend" style="margin-top:6px"><b>點開問卷</b>包含彈窗、左下角按鈕與頁尾連結，所以點開率可能超過 100%。網站只記得到「點開」，實際送出幾份請看
+    <a href="https://docs.google.com/spreadsheets/d/1p2rhynYm_Typk0wMdllSbWY2nag1sdVonfrTMo1hqj4/edit" target="_blank" rel="noopener">回覆試算表</a>（限你的 Google 帳號開啟）。</p>
   <h2 style="font-family:var(--serif);margin-top:40px">倫理專區：基因隱私事件簿</h2>
   <div class="scroll"><table class="tbl" id="eth"><thead><tr><th>檔案</th><th>訪客</th></tr></thead><tbody></tbody></table></div>
   <p style="margin-top:22px"><button class="btn" id="reload">重新整理數據</button> <button class="btn ghost" id="csv">下載 CSV</button></p>
@@ -111,7 +122,7 @@ function load() {
       $("kDone").textContent = nf.format(done);
       $("kEthics").textContent = nf.format(ethics);
       $("upd").textContent = "更新於 " + new Date().toLocaleTimeString("zh-TW") + "。";
-      render(); loadEthics();
+      render(); loadEthics(); loadSurvey(total);
       if (fails > 5) $("msg").innerHTML = '<div class="err">有 ' + fails + ' 項數字讀取失敗，請稍後按「重新整理數據」。</div>';
     });
   }).catch(function (err) {
@@ -150,12 +161,26 @@ function loadEthics() {
     }).join("");
   }).catch(function () {});
 }
+var SV = {};
+function loadSurvey(total) {
+  Promise.all([count("survey-show"), count("survey-open"), count("survey-later")]).then(function (v) {
+    SV = { show: v[0], open: v[1], later: v[2], total: total };
+    $("sShow").textContent = nf.format(v[0]);
+    $("sOpen").textContent = nf.format(v[1]);
+    $("sLater").textContent = nf.format(v[2]);
+    $("sRate").textContent = P(pct(v[1], v[0]));
+    $("sPer100").textContent = total ? (v[1] / total * 100).toFixed(1) : "—";
+    $("sBar").style.width = Math.min(100, (pct(v[1], v[0]) || 0) * 100) + "%";
+  }).catch(function () {});
+}
 $("reload").onclick = load;
 $("csv").onclick = function () {
   var h = ["集數", "標題", "點開", "點擊率", "播放", "看一半", "看完", "完播率", "分享"];
   var lines = [h.join(",")].concat(rows.map(function (r) {
     return [r.id, '"' + r.title + '"', r.open, P(r.ctr), r.play, r.half, r.done, P(r.cr), r.share].join(",");
   }));
+  if (SV.total != null) lines.push("", "觀後問卷,彈窗跳出,點開問卷,下次再說,彈窗點開率,每100位訪客點進",
+    ["", SV.show, SV.open, SV.later, P(pct(SV.open, SV.show)), SV.total ? (SV.open / SV.total * 100).toFixed(1) : ""].join(","));
   var a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob(["﻿" + lines.join("\n")], { type: "text/csv" }));
   a.download = "短影音流量_" + new Date().toISOString().slice(0, 10) + ".csv"; a.click();

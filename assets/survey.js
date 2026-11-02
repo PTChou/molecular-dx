@@ -75,7 +75,7 @@
   box.innerHTML =
     '<div class="box"><button class="x" aria-label="關閉">×</button>' +
     '<div class="ic">📝</div>' +
-    '<h3 id="svyT">看完了嗎？花 3 分鐘告訴我們你的想法</h3>' +
+    '<h3 id="svyT">看完了嗎？說說你的想法</h3>' +
     '<p>你的回饋會決定下一季要拍哪些主題，也幫助我們把內容講得更清楚。</p>' +
     '<div class="meta"><span>約 3 分鐘</span><span>匿名填答</span><span>已看過的集數會自動勾好</span></div>' +
     '<div class="act"><a class="btn" id="svyGo" target="_blank" rel="noopener">填寫問卷</a>' +
